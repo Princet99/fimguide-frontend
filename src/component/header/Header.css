@@ -1,0 +1,11 @@
+.navbar {
+  background-color: #327480;
+}
+
+button.btn.btn-link.nav-link.active {
+  color: inherit !important; 
+  text-decoration: none !important; 
+  background: none !important; 
+  outline: none !important; 
+  border: none; 
+}

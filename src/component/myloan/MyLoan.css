@@ -1,0 +1,247 @@
+body {
+  font-family: sans-serif;
+}
+/* Container for the whole layout */
+h1{
+    color: white;
+}
+/* toggle borrower to lender */
+.toggle-wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  margin: 20px auto; /* Adjust spacing above/below as needed */
+  z-index: 1;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 200px;
+  background-color: #2c2c2c; /* Dark gray background */
+  border-radius: 20px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.toggle-option {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 0;
+  border-radius: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #aaa; /* Dimmed text for unselected option */
+}
+
+.toggle-option.active {
+  background-color: #4caf50; /* Highlight color */
+  color: white; /* Highlighted text color */
+}
+
+.toggle-option.inactive {
+  color: #aaa; /* Dimmed color for inactive */
+}
+.Content {
+  background-color: #327480;
+  border-bottom-left-radius: 50% 60%;
+  border-bottom-right-radius: 50% 60%;
+  text-align: center;
+  padding: 20px 20px;
+  height: 10vh;
+}
+.Loan-container {
+  margin-top: 3%;
+  margin-left: 10%;
+  margin-right: 10%;
+  padding: 2px;
+  display: flex;
+  flex-wrap: wrap; /* Ensures items wrap on smaller screens */
+  gap: 20px;
+  /* border: 1px solid black; */
+  /* Adds space between the sections */
+}
+
+/* Section Styling */
+.section {
+  flex: 1 1 calc(50% - 20px); /* Each section takes 1/3rd of the available space */
+  border: 1px solid black; /*Border around each section 
+  /* padding: 20px; */
+  box-sizing: border-box;
+  text-align: center;
+  margin: 0;
+}
+
+.section .Heading {
+  margin: 0;
+  background-color: #34eba1;
+  font-weight: 700;
+}
+/* Coming Up Section Starts Here */
+
+.Coming_Up {
+  font-size: 24px;
+  font-weight: bold;
+}
+.Coming_Up p {
+  margin: 0;
+}
+
+/* Coming Up Section Ends Here */
+
+/* Loan Score Section Starts Here */
+
+/* Loan Score Section */
+/* Loan Score Section */
+/* Loan Score Section */
+.Loan_Score {
+  display: flex;
+  flex-direction: column; /* Stack heading and score vertically */
+  justify-content: center; /* Center all items vertically */
+  align-items: center; /* Center all items horizontally */
+  background-color: #03fc80;
+  height: 100%; /* Take full height of the parent section */
+  padding: 20px; /* Add padding for spacing */
+  box-sizing: border-box;
+  position: relative;
+   /* Enable absolute positioning for heading */
+}
+
+/* Make Heading Stick to the Top */
+.Loan_Score .Heading {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  background-color: transparent; /* Maintain inherited background */
+  width: 100%; /* Stretch heading across full width */
+  position: absolute; /* Position heading at the top */
+  top: 10px; /* Adjust spacing from the top */
+  left: 0; /* Ensure it's aligned horizontally */
+  margin: 0;
+}
+
+/* Score Centered */
+.Loan_Score .Score {
+  font-size: 24px; /* Larger font for emphasis */
+  font-weight: bold;
+  text-align: center;
+  word-wrap: break-word; /* Ensure long text wraps properly */
+  margin-top: auto; /* Push the score to center */
+  margin-bottom: auto;
+  position: relative; 
+  font-size: 48px;
+  margin-top: 15px;/* Reset position relative to parent */
+}
+
+/* Loan Score Section Ends Here */
+
+/* Loan Score Section Starts Here */
+.Loan-section {
+  flex: 1 1 100%;
+  /* border: 1px solid black; */
+  text-align: center;
+}
+.Loan-section .Heading {
+  margin: 0;
+  background-color: #34eba1;
+  font-weight: 700;
+}
+
+.Loan_Table {
+  width: 100%;
+}
+.Loan-section p {
+  margin: 0;
+  background-color: #34eba1;
+  font-weight: bold;
+}
+.Loan_Payment_Details {
+  width: 100%;
+}
+/* Loan Score Section Ends Here */
+
+/* Recents Payments Sections Starts Here */
+.Recent_Payment_Table {
+  width: 100%;
+}
+/* Recents Payments Sections Ends Here */
+
+.Loan_Details {
+  flex: 1 1 100%;
+  /* border: 1px solid black; */
+  text-align: center;
+}
+
+/* Adjustments for small screens */
+@media (max-width: 768px) {
+  .section {
+    flex: 1 1 100%; /* On small screens, sections stack vertically */
+  }
+}
+
+@media (max-width: 768px) {
+  .Loan_Score {
+    padding: 10px; /* Reduce padding for smaller screens */
+    font-size: 18px; /* Adjust font size for better readability */
+  }
+
+  .Loan_Score .Score {
+    font-size: 20px; /* Adjust font size for smaller devices */
+  }
+}
+
+
+/* Toggle button */
+
+.toggle-wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  margin: 20px auto; /* Adjust spacing above/below as needed */
+  z-index: 1;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 200px;
+  background-color: #2c2c2c; /* Dark gray background */
+  border-radius: 20px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.toggle-option {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 0;
+  border-radius: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #aaa; /* Dimmed text for unselected option */
+}
+
+.toggle-option.active {
+  background-color: #4caf50; /* Highlight color */
+  color: white; /* Highlighted text color */
+}
+
+.toggle-option.inactive {
+  color: #aaa; /* Dimmed color for inactive */
+}
+
+.label-loanname{
+  font-size: 28px;
+}
+
+.select{
+height: 25px;
+background-color: red
+;
+}

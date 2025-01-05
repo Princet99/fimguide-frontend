@@ -1,0 +1,100 @@
+{
+  "loans": {
+    "FA0001": {
+      "loanNumber": "FA0001",
+      "status": "Current",
+      "loanAmount": 5000.0,
+      "interestRate": 7.0,
+      "contractDate": "January 1, 2024",
+      "endDate": "January 1, 2026",
+      "loanScore": "A",
+      "onTimePayments": {
+        "number": 10,
+        "amount": 3000.0,
+        "points": 3000
+      },
+      "prepayments": {
+        "number": 1,
+        "amount": 200.0,
+        "points": 100
+      },
+      "late": {
+        "number": 0,
+        "amount": 0.0,
+        "points": 0
+      },
+      "total": {
+        "number": 11,
+        "amount": 3200.0,
+        "points": 3100
+      },
+      "currentBalance": 1800.0,
+      "upcomingPayment": {
+        "amount": 300.0,
+        "dueDate": "December 1, 2025"
+      },
+      "recentPayments": [
+        {
+          "scheduled": "11/1/2025",
+          "actual": "11/1/2025",
+          "amount": 300.0,
+          "status": "On time"
+        },
+        {
+          "scheduled": "10/1/2025",
+          "actual": "10/1/2025",
+          "amount": 300.0,
+          "status": "On time"
+        }
+      ]
+    },
+    "FA0002": {
+      "loanNumber": "FA0002",
+      "status": "Savings",
+      "loanAmount": 10000.0,
+      "interestRate": 5.5,
+      "contractDate": "February 1, 2024",
+      "endDate": "February 1, 2026",
+      "loanScore": "A+",
+      "onTimePayments": {
+        "number": 8,
+        "amount": 4000.0,
+        "points": 4000
+      },
+      "prepayments": {
+        "number": 2,
+        "amount": 500.0,
+        "points": 200
+      },
+      "late": {
+        "number": 1,
+        "amount": 100.0,
+        "points": 50
+      },
+      "total": {
+        "number": 11,
+        "amount": 4600.0,
+        "points": 4250
+      },
+      "currentBalance": 5400.0,
+      "upcomingPayment": {
+        "amount": 500.0,
+        "dueDate": "December 15, 2025"
+      },
+      "recentPayments": [
+        {
+          "scheduled": "11/15/2025",
+          "actual": "11/15/2025",
+          "amount": 500.0,
+          "status": "On time"
+        },
+        {
+          "scheduled": "10/15/2025",
+          "actual": "10/15/2025",
+          "amount": 500.0,
+          "status": "On time"
+        }
+      ]
+    }
+  }
+}

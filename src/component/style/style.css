@@ -1,0 +1,62 @@
+body {
+  background-color: #f6feff;
+}
+
+.flex{
+color: white;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid;
+  border-color: #dbdcef;
+  border-right-color: #ffffff;
+  animation: spinner-d3wgkg 1s infinite linear;
+}
+
+@keyframes spinner-d3wgkg {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.my-clip-path {
+  background-color: #327480;
+  clip-path: ellipse(70% 50% at 50% 0%);
+}
+
+.clip-container {
+  background-color: #327480; /* Background color */
+  clip-path: ellipse(70% 50% at 50% 0%); /* Adjusted clip path for better fit */
+  padding: 2rem; /* Padding inside the clipping path */
+  border-radius: 1rem; /* Optional: for rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: for some depth */
+  display: flex; /* Ensure flex properties are respected */
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+  height: auto; /* Ensure container height adjusts to fit content */
+}
+
+.half-moon {
+  width: 100%;
+  height: 200px;
+  background: #007bff; /* Change color as needed */
+  clip-path: path("M 100,0 A 100,100 0 1,1 0,100 A 100,100 0 1,1 100,0 Z");
+}
+
+.half-ellipse2 {
+  border-radius: 70% / 0 0 70% 70%;
+}
+
+.half-ellipse {
+  background-color: #327480;
+  color: black;
+  /* background-color: #32557f; */
+  width: 100%;
+  height: 200px;
+  padding-top: 3rem;
+}
+
+
