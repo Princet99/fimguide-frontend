@@ -9,12 +9,17 @@ const Login = ({ setIsLoggedIn }) => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const apiUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://fimguide-backend-production.up.railway.app"
+      : "http://localhost:3030";
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:3030/login?username=${username}&password=${password}`
+        `${apiUrl}/login?username=${username}&password=${password}`
       );
 
       if (!response.ok) {
@@ -25,6 +30,7 @@ const Login = ({ setIsLoggedIn }) => {
 
       const data = await response.json();
       if (data.success) {
+        sessionStorage.setItem("username", username);
         sessionStorage.setItem("userId", data.id); // Save session
         setIsLoggedIn(true); // Update login state
         toast.success("Login successful!");

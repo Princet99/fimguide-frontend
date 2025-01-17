@@ -1,5 +1,8 @@
 .navbar {
-  background-color: #327480;
+  /* background-color: #327480; */
+  background: linear-gradient(to bottom, #F8F9FA, #EDEDED); /* Light gray gradient */
+color: #000000; /* Black text */
+
 }
 
 button.btn.btn-link.nav-link.active {

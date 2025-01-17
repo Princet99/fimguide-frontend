@@ -2,8 +2,9 @@ body {
   font-family: sans-serif;
 }
 /* Container for the whole layout */
-h1{
-    color: white;
+.Content h1 {
+  color: black;
+  font-size: 28px;
 }
 /* toggle borrower to lender */
 .toggle-wrapper {
@@ -46,7 +47,9 @@ h1{
   color: #aaa; /* Dimmed color for inactive */
 }
 .Content {
-  background-color: #327480;
+  /* background-color: #327480; */
+  background: linear-gradient(to bottom, #f8f9fa, #ededed);
+  color: black;
   border-bottom-left-radius: 50% 60%;
   border-bottom-right-radius: 50% 60%;
   text-align: center;
@@ -83,11 +86,32 @@ h1{
 /* Coming Up Section Starts Here */
 
 .Coming_Up {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
+  height: 200px;
+  align-items: center;
+  position: relative;
 }
+.loan_completed {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
 .Coming_Up p {
   margin: 0;
+}
+
+.loan_state_info {
+  display: flex;
+  flex-direction: row;
+}
+
+.loan_state_info .loan_info,
+.loan_state_info .loan_state {
+  flex: 1; /* Makes each child take an equal portion of the available width */
 }
 
 /* Coming Up Section Ends Here */
@@ -107,7 +131,7 @@ h1{
   padding: 20px; /* Add padding for spacing */
   box-sizing: border-box;
   position: relative;
-   /* Enable absolute positioning for heading */
+  /* Enable absolute positioning for heading */
 }
 
 /* Make Heading Stick to the Top */
@@ -131,9 +155,9 @@ h1{
   word-wrap: break-word; /* Ensure long text wraps properly */
   margin-top: auto; /* Push the score to center */
   margin-bottom: auto;
-  position: relative; 
+  position: relative;
   font-size: 48px;
-  margin-top: 15px;/* Reset position relative to parent */
+  margin-top: 15px; /* Reset position relative to parent */
 }
 
 /* Loan Score Section Ends Here */
@@ -143,6 +167,7 @@ h1{
   flex: 1 1 100%;
   /* border: 1px solid black; */
   text-align: center;
+  border: 1px solid black;
 }
 .Loan-section .Heading {
   margin: 0;
@@ -193,7 +218,6 @@ h1{
   }
 }
 
-
 /* Toggle button */
 
 .toggle-wrapper {
@@ -236,12 +260,26 @@ h1{
   color: #aaa; /* Dimmed color for inactive */
 }
 
-.label-loanname{
+.label-loanname {
   font-size: 28px;
 }
 
-.select{
-height: 25px;
-background-color: red
-;
+.select-loan {
+  font-size: 18px;
+  align-items: center;
+}
+option {
+  text-align: center;
+}
+
+/* Loan state */
+.state_borrower {
+  color: red;
+}
+.state_lender {
+  color: red;
+}
+
+.state_lender p{
+  font-size: 16px;
 }
