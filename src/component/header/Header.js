@@ -1,21 +1,47 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Header.css";
+import ProfileCard from "./ProfileCard";
 import { Link, useNavigate } from "react-router-dom";
-const Header = ({ isLoggedIn, handleLogout }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
+import { useAuth0 } from "@auth0/auth0-react";
+import { toast } from "react-toastify";
 
+const Header = () => {
   const navigate = useNavigate();
-  const username = sessionStorage.getItem("username");
-  const handleLoginLogout = () => {
-    if (isLoggedIn) {
-      handleLogout(); // Call the logout function
-      navigate("/"); // Redirect to home
-    } else {
-      navigate("/Login"); // Redirect to login page
+  const { isAuthenticated, loginWithRedirect, logout, user, isLoading } =
+    useAuth0();
+
+  const handleAuth0Login = async () => {
+    try {
+      await loginWithRedirect();
+    } catch (error) {
+      console.error("Auth0 login error:", error);
+      toast.error("Failed to redirect to Auth0 login.");
     }
   };
 
-  const toggleDropdown = () => setShowDropdown(!showDropdown);
+  // New signup handler using Auth0 screen_hint
+  const handleAuth0SignUp = async () => {
+    try {
+      await loginWithRedirect({
+        authorizationParams: {
+          screen_hint: "signup",
+        },
+      });
+    } catch (error) {
+      console.error("Auth0 signup error:", error);
+      toast.error("Failed to redirect to Auth0 signup.");
+    }
+  };
+
+  const handleAuth0Logout = () => {
+    try {
+      logout({ returnTo: window.location.origin }); // Redirect to home page after logout
+      toast.success("Logged out successfully!");
+    } catch (error) {
+      console.error("Auth0 logout error:", error);
+      toast.error("Failed to logout.");
+    }
+  };
 
   return (
     <nav className="navbar navbar-expand-lg shadow">
@@ -34,21 +60,15 @@ const Header = ({ isLoggedIn, handleLogout }) => {
             </Link>
           </li>
         </ul>
-        {/* Dynamic Login/Logout Link */}
         <nav>
-          {isLoggedIn && (
-            <div style={{ position: "relative", display: "inline-block" }}>
-              <span onClick={toggleDropdown} style={{ cursor: "pointer" }}>
-                Hello {username}
-              </span>
-              {showDropdown && (
-                <div style={{ position: "absolute", top: "100%", left: 0 }}>
-                  <button onClick={handleLoginLogout}>Logout</button>
-                </div>
-              )}
-            </div>
-          )}
-          {!isLoggedIn && <button onClick={handleLoginLogout}>Login</button>}
+          <ProfileCard
+            isLoggedIn={isAuthenticated}
+            userName={user?.name}
+            profilePic={user?.picture}
+            onLogin={handleAuth0Login}
+            onSignUp={handleAuth0SignUp} // passed signup handler
+            onLogout={handleAuth0Logout}
+          />
         </nav>
       </div>
     </nav>

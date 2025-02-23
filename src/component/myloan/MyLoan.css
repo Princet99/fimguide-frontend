@@ -280,6 +280,14 @@ option {
   color: red;
 }
 
-.state_lender p{
+.state_borrower_first_transaction {
+  color: #2e7c94;
+}
+
+.state_lender p {
   font-size: 16px;
+}
+
+.Current_Balance {
+  margin-top: 25px;
 }

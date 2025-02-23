@@ -1,83 +1,81 @@
-import React, { useState } from "react";
+// Login.js
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth0 } from "@auth0/auth0-react";
 import "./login.css";
 
-const Login = ({ setIsLoggedIn }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+const Login = ({ setIsLoggedIn, setUser }) => {
+  const {
+    isAuthenticated,
+    user,
+    loginWithRedirect,
+    logout,
+    isLoading,
+    getAccessTokenSilently,
+  } = useAuth0();
+
   const navigate = useNavigate();
 
-  const apiUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://fimguide-backend-production.up.railway.app"
-      : "http://localhost:3030";
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleAuth0Login = async () => {
     try {
-      const response = await fetch(
-        `${apiUrl}/login?username=${username}&password=${password}`
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(errorData.error || "Login failed");
-        return;
-      }
-
-      const data = await response.json();
-      if (data.success) {
-        sessionStorage.setItem("username", username);
-        sessionStorage.setItem("userId", data.id); // Save session
-        setIsLoggedIn(true); // Update login state
-        toast.success("Login successful!");
-        navigate("/loan");
-      } else {
-        toast.error(data.message || "Login failed");
-      }
+      loginWithRedirect();
     } catch (error) {
-      console.error("Error during login:", error);
-      toast.error("Something went wrong. Please try again later.");
+      console.error("Auth0 login error:", error);
+      toast.error("Failed to redirect to Auth0 login.");
     }
   };
+
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      if (isAuthenticated) {
+        try {
+          const accessToken = await getAccessTokenSilently();
+
+          sessionStorage.setItem("user", JSON.stringify(user));
+          sessionStorage.setItem("access_token", accessToken);
+
+          setIsLoggedIn(true);
+          navigate("/loan");
+        } catch (error) {
+          console.error("Error getting access token:", error);
+          toast.error("Failed to retrieve access token.");
+        }
+      }
+    };
+
+    fetchAccessToken();
+  }, [isAuthenticated, navigate, user, setIsLoggedIn, getAccessTokenSilently]);
+
+  const handleLogout = () => {
+    console.log("Login.js: handleLogout called");
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("access_token");
+    setIsLoggedIn(false);
+    logout({
+      returnTo: window.location.origin,
+    });
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="login-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          {errors.username && (
-            <span className="error-message">{errors.username}</span>
-          )}
+      {isAuthenticated ? (
+        <div>
+          <h3>Hello, {user?.name}</h3>
+          <button onClick={handleLogout} className="login-btn">
+            Logout
+          </button>
         </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errors.password && (
-            <span className="error-message">{errors.password}</span>
-          )}
-        </div>
-        <button type="submit" className="login-btn">
-          Login
+      ) : (
+        <button onClick={handleAuth0Login} className="login-btn">
+          Login with Auth0
         </button>
-      </form>
+      )}
     </div>
   );
 };
