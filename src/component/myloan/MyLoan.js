@@ -30,7 +30,7 @@ const MyLoan = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:3030/paymentverification/${selectedLoanNumber}`
+          `${apiUrl}/paymentverification/${selectedLoanNumber}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch payment history.");
@@ -99,7 +99,7 @@ const MyLoan = () => {
           // Redirect to login to request consent
           await loginWithRedirect({
             authorizationParams: {
-              audience: "http://localhost:3030",
+              audience: process.env.REACT_APP_AUTH_AUDIENCE,
               scope: "read:posts",
             },
           });
@@ -203,7 +203,7 @@ const MyLoan = () => {
     try {
       const token = await getAccessTokenSilently({
         authorizationParams: {
-          audience: "http://localhost:3030",
+          audience: process.env.REACT_APP_AUTH_AUDIENCE,
           scope: "update:users", // Update the scope as needed
         },
       });
@@ -252,7 +252,7 @@ const MyLoan = () => {
       if (e.error === "consent_required" || e.error === "login_required") {
         await loginWithRedirect({
           authorizationParams: {
-            audience: "http://localhost:3030",
+            audience: process.env.REACT_APP_AUTH_AUDIENCE,
             scope: "update:users",
           },
         });
