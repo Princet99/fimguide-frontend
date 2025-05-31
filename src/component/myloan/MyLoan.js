@@ -215,7 +215,7 @@ const MyLoan = () => {
 
       const auth0Sub = users.sub;
 
-      const response = await fetch("http://localhost:3030/update", {
+      const response = await fetch("${apiUrl}/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
