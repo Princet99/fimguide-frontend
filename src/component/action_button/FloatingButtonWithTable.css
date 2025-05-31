@@ -1,0 +1,186 @@
+.floating-button-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.floating-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.floating-button:hover {
+  background-color: #0056b3;
+}
+
+/* Table Popup Styles */
+.table-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.close-button {
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.custom-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.h2 {
+  align-items: center;
+}
+
+.table-header h2 {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+}
+
+/* Upload button */
+
+.Button {
+  border: 2px solid black;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+a:link {
+  color: blue;
+}
+
+/* Select Option Css */
+
+select {
+  display: inline-flex; /* Use flex to align content */
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px; /* Padding for a clean look */
+  background-color: #4CAF50; /* Light green background */
+  color: white;
+  border: none;
+  border-radius: 6px; /* Rounded corners */
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  white-space: nowrap; /* Prevent text from wrapping */
+  width: 180px; /* Adjust width automatically to fit text */
+  appearance: none;
+  -webkit-appearance: none; /* Remove native browser styling */
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%23fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="6 9 12 15 18 9"%3E%3C/polyline%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: calc(100% - 10px) center; /* Align arrow dynamically */
+  background-size: 12px 12px;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+
+select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(72, 239, 144, 0.5); /* Add focus effect */
+}
+
+select:active {
+  background-color: #3AAE5F; /* Slightly darker green on click */
+}
+
+
+
+
+.upload-label {
+  display: inline-flex; /* Use flex to align icon and text */
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  background-color: #28a745; /* Green color for upload */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+}
+
+/* Principal amount fixed css */
+
+/* In your CSS file (e.g., index.css) */
+
+.lender-payment-row {
+  background-color: #e0f7fa; /* Light blue background for lender payments */
+  font-weight: bold;
+}
+
+.lender-payment-badge {
+  background-color: #28a745; /* Green badge */
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-size: 0.8em;
+  font-weight: normal; /* Keep the badge text normal weight */
+}
+
+/* Optional: Styles for upload status messages */
+.upload-status {
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.upload-status.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.upload-status.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}

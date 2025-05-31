@@ -1,0 +1,132 @@
+.Coming_Up {
+  font-size: 14.5px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  grid-template-rows: auto auto; /* Two rows: first row for LoanInfo and LoanStateMessage, second row for Current_Balance */
+  gap: 8px; /* Space between grid items */
+  padding: 16px;
+  max-width: 100%; /* Ensures layout doesn't overflow parent */
+  box-sizing: border-box; /* Includes padding in the element's width and height */
+}
+
+.Coming_Up > * {
+  overflow-wrap: break-word; /* Prevents text from overflowing */
+  white-space: normal; /* Ensures text wraps within its container */
+}
+
+.LoanInfo,
+.LoanStateMessage {
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.loan_state_payment {
+  color: red;
+}
+.Current_Balance {
+  grid-column: 1 / span 2; /* Spans across both columns */
+  border-radius: 8px;
+  text-align: center; /* Center-aligns text */
+  font-weight: bold; /* Makes balance text stand out */
+}
+
+.Current_Balance > div {
+  font-size: 1.2em; /* Slightly larger font size for better visibility */
+}
+
+/* Hover css */
+
+.loan-state-message {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.loan-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.5rem;
+  width: 21rem; /* Increased width to cover the last column */
+  background-color: #ffffff; /* White background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #d1d5db; /* Neutral gray border */
+  border-radius: 0.5rem; /* Rounded corners */
+  padding: 1rem;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.loan-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.loan-tooltip h4 {
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #374151; /* Tailwind gray-700 equivalent */
+  text-align: center;
+}
+
+.loan-tooltip table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.loan-tooltip table th,
+.loan-tooltip table td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #e5e7eb; /* Tailwind gray-200 equivalent */
+}
+
+.loan-tooltip table th {
+  font-weight: 600;
+  color: #4b5563; /* Tailwind gray-600 equivalent */
+}
+
+.loan-tooltip table td {
+  color: #6b7280; /* Tailwind gray-500 equivalent */
+}
+
+.tooltip-trigger {
+  color: #ef4444; /* Tailwind red-500 equivalent */
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  display: inline-block;
+  padding: 0.25rem;
+  border-radius: 50%;
+  background-color: #fde8e8; /* Light red background */
+  text-align: center;
+  line-height: 1;
+}
+
+.tooltip-trigger:hover {
+  background-color: #fca5a5; /* Tailwind red-300 equivalent */
+  color: #b91c1c; /* Tailwind red-700 equivalent */
+}
+
+.group:hover .loan-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.after-first-row {
+  border-bottom: 2px solid #e5e7eb; /* Add a line after the first row */
+}
+
+.before-last-row {
+  border-top: 2px solid #e5e7eb; /* Add a line before the last row */
+}
+
+.LoanStateMessage {
+  /* border: 2px solid black; */
+  grid-column: 1fr;
+}

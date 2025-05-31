@@ -1,6 +1,40 @@
 body {
   font-family: sans-serif;
 }
+/* button style default for all */
+/* Default button styles */
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background-color: #1d4ed8; /* Blue */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover state */
+.btn:hover {
+  background-color: #2563eb; /* Lighter blue */
+  transform: translateY(-2px);
+}
+
+/* Focus state */
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5);
+}
+
+/* Disabled state */
+.btn:disabled {
+  background-color: #94a3b8; /* Gray */
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 /* Container for the whole layout */
 .Content h1 {
   color: black;
@@ -56,26 +90,77 @@ body {
   padding: 20px 20px;
   height: 10vh;
 }
+
+.loan-select {
+  display: inline-block; /* Allow the element to size itself */
+  padding: 10px 15px; /* Add padding for better appearance */
+  border: 1px solid #ccc; /* Optional styling for visibility */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #f9f9f9; /* Background color */
+  width: auto;
+  text-align: center; /* Center text */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden; /* Hide overflow */
+  text-overflow: ellipsis; /* Add ellipsis if text is too long */
+}
+
 .Loan-container {
   margin-top: 3%;
   margin-left: 10%;
   margin-right: 10%;
   padding: 2px;
-  display: flex;
   flex-wrap: wrap; /* Ensures items wrap on smaller screens */
-  gap: 20px;
-  /* border: 1px solid black; */
-  /* Adds space between the sections */
+  display: flex; /* Ensure it's a flex container */
+  gap: 10px; /* Adjust this value as needed for the desired gap */
 }
 
 /* Section Styling */
 .section {
-  flex: 1 1 calc(50% - 20px); /* Each section takes 1/3rd of the available space */
-  border: 1px solid black; /*Border around each section 
-  /* padding: 20px; */
+  border: 1px solid black;
   box-sizing: border-box;
   text-align: center;
   margin: 0;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.first-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Grid coming up */
+
+.left-container {
+  flex: 1; /* Takes 50% of the width */
+  border: 2px solid black;
+  box-sizing: border-box; /* Includes padding and border in the width */
+}
+
+.right-grid {
+  flex: 1; /* Takes 50% of the width */
+  display: grid;
+  border: 2px solid black;
+  grid-template-columns: repeat(2, 1fr); /* Grid layout within this container */
+  gap: 5px;
+  box-sizing: border-box; /* Includes padding and border in the width */
+  align-items: start;
+  background-color: #ffffff;
+}
+
+/* grid items */
+
+.Heading {
+  min-height: 1px;
+  grid-column: 1 / span 2;
+  margin: 0;
+  background-color: #34eba1;
+  font-weight: 700;
+}
+
+.Score {
+  grid-column: 1 / span 2;
 }
 
 .section .Heading {
@@ -116,37 +201,6 @@ body {
 
 /* Coming Up Section Ends Here */
 
-/* Loan Score Section Starts Here */
-
-/* Loan Score Section */
-/* Loan Score Section */
-/* Loan Score Section */
-.Loan_Score {
-  display: flex;
-  flex-direction: column; /* Stack heading and score vertically */
-  justify-content: center; /* Center all items vertically */
-  align-items: center; /* Center all items horizontally */
-  background-color: #03fc80;
-  height: 100%; /* Take full height of the parent section */
-  padding: 20px; /* Add padding for spacing */
-  box-sizing: border-box;
-  position: relative;
-  /* Enable absolute positioning for heading */
-}
-
-/* Make Heading Stick to the Top */
-.Loan_Score .Heading {
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  background-color: transparent; /* Maintain inherited background */
-  width: 100%; /* Stretch heading across full width */
-  position: absolute; /* Position heading at the top */
-  top: 10px; /* Adjust spacing from the top */
-  left: 0; /* Ensure it's aligned horizontally */
-  margin: 0;
-}
-
 /* Score Centered */
 .Loan_Score .Score {
   font-size: 24px; /* Larger font for emphasis */
@@ -168,6 +222,8 @@ body {
   /* border: 1px solid black; */
   text-align: center;
   border: 1px solid black;
+  margin-top: 10px; /* Adjust as needed */
+  width: 100%;
 }
 .Loan-section .Heading {
   margin: 0;
@@ -280,6 +336,39 @@ option {
   color: red;
 }
 
-.state_lender p{
+.state_borrower_first_transaction {
+  color: #2e7c94;
+}
+
+.state_lender p {
   font-size: 16px;
+}
+
+.Current_Balance {
+  margin-top: 25px;
+}
+
+.financial-snapshot-container {
+  background-color: #e9f5ff; /* Light blue background */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  text-align: center;
+  border: 1px solid #cce7ff;
+  width: 80%;
+  margin: 0 auto 25px;
+}
+
+.upload-section {
+  margin-bottom: 25px;
+  padding: 20px;
+  background-color: #f8f9fa; /* Very light gray for upload area */
+  border-radius: 8px;
+  border: 1px dashed #ced4da; /* Dashed border */
+  text-align: center;
+  grid-column: 1 / span 2;
+  width: 80%;
+  margin: 0 auto 25px;
+  display: flex;
+  justify-content: space-evenly;
 }

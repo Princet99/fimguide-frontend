@@ -1,0 +1,6 @@
+/* Grid item from Myloan.js */
+
+.loan_info{
+    grid-column: 1fr;
+    /* border: 2px solid black; */
+}

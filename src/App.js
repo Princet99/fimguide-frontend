@@ -12,21 +12,30 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    !!sessionStorage.getItem("userId") // Initialize based on session
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const { logout } = useAuth0(); // Get Auth0 logout function
 
   const handleLogout = () => {
-    sessionStorage.removeItem("userId"); // Clear user ID from session
+    console.log("App.js: handleLogout called");
+    setIsLoggedIn(false);
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("access_token");
+    logout({
+      returnTo: window.location.origin, // Make sure to return to the right page
+    });
+    // sessionStorage.removeItem("userId"); // Clear user ID from session
     setIsLoggedIn(false); // Set login state to false
     toast.success("Logged out successfully!");
   };
 
   return (
     <Router>
-      <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+      <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} user={user} />
       <Routes>
         {/* Home Route */}
         <Route path="/" element={<Home />} />
@@ -44,7 +53,7 @@ function App() {
             isLoggedIn ? (
               <Navigate to="/loan" />
             ) : (
-              <Login setIsLoggedIn={setIsLoggedIn} />
+              <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} />
             )
           }
         />
