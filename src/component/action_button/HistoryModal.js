@@ -22,6 +22,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
       ? "https://fimguide-backend.onrender.com"
       : "http://localhost:3030";
 
+  console.log(apiUrl);
   useEffect(() => {
     const fetchAndCheckPaymentHistory = async () => {
       if (!Loanno) {
@@ -33,9 +34,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
       setHistoryError(null);
 
       try {
-        const response = await fetch(
-          `${apiUrl}/paymentverification/${Loanno}`
-        );
+        const response = await fetch(`${apiUrl}/paymentverification/${Loanno}`);
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(
@@ -66,16 +65,12 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
 
     fetchAndCheckPaymentHistory();
   }, [Loanno]);
-  
-  
 
   const fetchPaymentHistory = async (Loanno) => {
     setHistoryLoading(true);
     setHistoryError(null);
     try {
-      const response = await fetch(
-        `http://localhost:3030/paymentverification/${Loanno}`
-      );
+      const response = await fetch(`${apiUrl}/paymentverification/${Loanno}`);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
@@ -113,11 +108,11 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
       setHistoryLoading(false);
     }
   };
-  
+
   const handleVerificationStatusChange = async (recordId, newStatus) => {
     try {
       const response = await fetch(
-        `http://localhost:3030/paymentverification/${recordId}`,
+        `${apiUrl}/paymentverification/${recordId}`,
         {
           method: "PUT",
           headers: {
@@ -166,7 +161,6 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
   };
 
   // Toast Notification
-  
 
   return (
     <div className="table-popup">
@@ -235,6 +229,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                   {selectedrole !== record.payer_role ? (
                     // If current user's role is DIFFERENT from payer's role, show dropdown
                     <select
+                      className="History_Modal_Select"
                       value={record.verification_status || ""} // Ensure value is not null/undefined for select
                       onChange={(e) =>
                         handleVerificationStatusChange(
@@ -246,20 +241,23 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                       <option value="" disabled>
                         Unverified
                       </option>
-                      <option value="0">Wrong Amount</option>
-                      <option value="1">Wrong date</option>
-                      <option value="2">Not received</option>
-                      <option value="3">Verified</option>
+                      <option value="1">Wrong Amount</option>
+                      <option value="2">Wrong date</option>
+                      <option value="3">Not received</option>
+                      <option value="4">Verified</option>
+                      <option value="5">Checking</option>
                     </select>
                   ) : // If current user's role is the SAME as payer's role, show static text
-                  record.verification_status === 0 ? (
+                  record.verification_status === 1 ? (
                     "Wrong Amount"
-                  ) : record.verification_status === 1 ? (
-                    "Wrong date"
                   ) : record.verification_status === 2 ? (
-                    "Not received"
+                    "Wrong date"
                   ) : record.verification_status === 3 ? (
+                    "Not received"
+                  ) : record.verification_status === 4 ? (
                     "Verified"
+                  ) : record.verification_status === 5 ? (
+                    "Checking"
                   ) : (
                     "Verification Pending"
                   )}

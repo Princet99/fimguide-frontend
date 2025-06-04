@@ -23,8 +23,8 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
   const [fileName, setFileName] = useState(""); // New state to hold the selected file's name
   const [uploadStatus, setUploadStatus] = useState("");
   const fileInputRef = useRef(null);
-  
-  console.log("loan no : " , Loanno)
+
+  console.log("loan no : ", Loanno);
   console.log("selected role : ", selectedrole);
   console.log("onClose : ", onClose);
   const uploadFunction = () => {
@@ -44,7 +44,6 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
 
-    
     if (file) {
       setFileName(file.name); // Set the file name state
       setUploadStatus("Uploading...");

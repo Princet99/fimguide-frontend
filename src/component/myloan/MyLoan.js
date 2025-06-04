@@ -22,7 +22,7 @@ const MyLoan = () => {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [paymentHistory, setPaymentHistory] = useState([]);
 
-  // toast notification 
+  // toast notification
   useEffect(() => {
     // Fetch payment history and check for pending verifications on page load
     const fetchPaymentHistory = async () => {
@@ -30,7 +30,7 @@ const MyLoan = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:3030/paymentverification/${selectedLoanNumber}`
+          `${apiUrl}/paymentverification/${selectedLoanNumber}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch payment history.");
@@ -54,7 +54,6 @@ const MyLoan = () => {
     fetchPaymentHistory();
   }, [selectedLoanNumber]);
 
-  
   // connect id setup
   const [formData, setFormData] = useState({
     id: "",
@@ -77,6 +76,7 @@ const MyLoan = () => {
       ? "https://fimguide-backend.onrender.com"
       : "http://localhost:3030";
   // To get user details and loan details
+  console.log(apiUrl);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -99,7 +99,7 @@ const MyLoan = () => {
           // Redirect to login to request consent
           await loginWithRedirect({
             authorizationParams: {
-              audience: "http://localhost:3030",
+              audience: process.env.REACT_APP_AUTH_AUDIENCE,
               scope: "read:posts",
             },
           });
@@ -203,7 +203,7 @@ const MyLoan = () => {
     try {
       const token = await getAccessTokenSilently({
         authorizationParams: {
-          audience: "http://localhost:3030",
+          audience: process.env.REACT_APP_AUTH_AUDIENCE,
           scope: "update:users", // Update the scope as needed
         },
       });
@@ -215,7 +215,7 @@ const MyLoan = () => {
 
       const auth0Sub = users.sub;
 
-      const response = await fetch("http://localhost:3030/update", {
+      const response = await fetch(`${apiUrl}/update`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -252,7 +252,7 @@ const MyLoan = () => {
       if (e.error === "consent_required" || e.error === "login_required") {
         await loginWithRedirect({
           authorizationParams: {
-            audience: "http://localhost:3030",
+            audience: process.env.REACT_APP_AUTH_AUDIENCE,
             scope: "update:users",
           },
         });
@@ -294,13 +294,11 @@ const MyLoan = () => {
     setIsHistoryModalOpen(false);
   };
 
-  
-
   return (
     <>
       {selectedLoanNumber ? (
         <div className="Content">
-          <h1>My Loans</h1>
+          <h1>Dashboard</h1>
           <div className="Loan-container">
             {/* Loan Details */}
             <div className="Loan_Details">
@@ -337,13 +335,14 @@ const MyLoan = () => {
 
               {/* Scoring Section */}
               <div className="right-grid">
-                <div className="Heading">Financial Snapshot</div>
-                <div className="Score">
+                <div className="Heading">Payment confirmation</div>
+                {/*  */}
+                {/* <div className="Score">
                   <div className="financial-snapshot-container">
                     Loan Score&nbsp;
                     {selectedLoanDetails?.loan_details?.score}
                   </div>
-                </div>
+                </div> */}
                 <div className="upload-section">
                   <div class="item-1">
                     <button class="btn" onClick={handleOpenUploadModal}>
@@ -352,7 +351,7 @@ const MyLoan = () => {
                   </div>
                   <div class="item-2">
                     <button class="btn" onClick={handleOpenHistoryModal}>
-                      Payment History
+                      Confirmation History
                     </button>
                   </div>
                 </div>
