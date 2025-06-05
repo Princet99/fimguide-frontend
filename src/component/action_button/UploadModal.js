@@ -16,6 +16,7 @@ const formatDateToYYYYMMDD = (date) => {
 
 // UploadModal component now accepts 'selectedrole' as a prop
 const UploadModal = ({ Loanno, selectedrole, onClose }) => {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [amount, setAmount] = useState("");
   const [comments, setComments] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -27,81 +28,116 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
   console.log("loan no : ", Loanno);
   console.log("selected role : ", selectedrole);
   console.log("onClose : ", onClose);
-  const uploadFunction = () => {
-    if (!Loanno || !amount || !selectedDate || !selectedrole) {
-      toast.warn("Please fill all required fields before uploading.");
-      setUploadStatus(
-        "Please ensure LUID is provided, fill in Amount, select a Payment Date, and ensure your role is set."
-      );
-      return;
-    }
-    // Programmatically click the hidden file input
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setFileName(file.name);
+      setUploadStatus(""); // Reset status when a new file is selected
+      setUploadedFileData(null); // Clear previous data
+    } else {
+      setSelectedFile(null);
+      setFileName("");
     }
   };
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
+  const handleSubmit = async () => {
+    if (!selectedFile) {
+      toast.warn("Please select a file to upload.");
+      setUploadStatus("No file selected.");
+      return;
+    }
 
-    if (file) {
-      setFileName(file.name); // Set the file name state
-      setUploadStatus("Uploading...");
-      setUploadedFileData(null); // Clear previous upload data
+    // Basic validation for other fields (add more as needed)
+    if (!Loanno || !selectedDate || !amount || !selectedrole) {
+      toast.warn("Please fill all required fields before uploading.");
+      setUploadStatus("Missing required fields.");
+      return;
+    }
 
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("luid", Loanno);
-      formData.append("payment_date", formatDateToYYYYMMDD(selectedDate));
-      formData.append("amount", amount);
-      formData.append("comments", comments);
-      formData.append("payer_role", selectedrole); // <--- NEW: Include the payer_role
+    setUploadStatus("Uploading...");
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    formData.append("luid", Loanno);
+    formData.append("payment_date", formatDateToYYYYMMDD(selectedDate));
+    formData.append("amount", amount);
+    formData.append("comments", comments);
+    formData.append("payer_role", selectedrole);
 
-      const apiUrl =
-        process.env.REACT_APP_ENV === "production"
-          ? "https://fimguide-backend.onrender.com"
-          : "http://localhost:3030";
+    // Determine API URL based on environment
+    // In a real Canvas app, you might not use process.env directly in the browser.
+    // This is kept for consistency with your original code.
+    const apiUrl =
+      typeof process !== "undefined" &&
+      process.env &&
+      process.env.REACT_APP_ENV === "production"
+        ? "https://fimguide-backend.onrender.com"
+        : "http://localhost:3030"; // Default to localhost if process is not defined (e.g. in simple browser env)
 
-      try {
-        const response = await fetch(`${apiUrl}/api/photo/upload`, {
-          method: "POST",
-          body: formData,
-        });
+    try {
+      const response = await fetch(`${apiUrl}/api/photo/upload`, {
+        method: "POST",
+        body: formData,
+        // Note: 'Content-Type' header is automatically set by the browser
+        // for FormData, so you don't usually need to set it manually.
+      });
 
-        if (!response.ok) {
-          toast.warn("Please fill all required fields before uploading.");
-        }
+      // It's good practice to check if the response is JSON before parsing
+      const contentType = response.headers.get("content-type");
+      let data;
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await response.json();
+      } else {
+        // Handle non-JSON responses if necessary, or throw an error
+        const textResponse = await response.text();
+        throw new Error(
+          `Unexpected response format: ${textResponse || "Empty response"}`
+        );
+      }
 
-        const data = await response.json();
+      if (!response.ok) {
+        // Use message from backend if available, otherwise use a generic one
+        const errorMessage =
+          data?.message || `HTTP error! status: ${response.status}`;
+        toast.warn(errorMessage);
+        setUploadStatus(`Upload failed: ${errorMessage}`);
+        return; // Important to return here to prevent further processing
+      }
 
-        if (data.success) {
-          setUploadStatus("Upload successful!");
-          setUploadedFileData(data); // Store the API response data
-          // Reset form fields after successful upload
-          setSelectedDate(null);
-          setAmount("");
-          setComments("");
-          setFileName(""); // Clear file name display
-          // Clear the file input value to allow re-uploading the same file
-          if (fileInputRef.current) {
-            fileInputRef.current.value = null;
-          }
-        } else {
-          setUploadStatus(
-            `Upload failed: ${data.message || "Unknown error from backend"}`
-          );
-        }
-      } catch (error) {
-        setUploadStatus(`Upload failed: ${error.message}`);
-      } finally {
-        // Ensure the file input value is cleared even on error
+      if (data.success) {
+        setUploadStatus("Upload successful!");
+        toast.success("Upload successful!");
+        setUploadedFileData(data);
+        // Reset form fields after successful upload
+        setSelectedFile(null);
+        setFileName("");
+        setSelectedDate(null); // Or reset to a default date
+        setAmount("");
+        setComments("");
+        // setSelectedrole(""); // You might want to keep the role or reset it
+
+        // Clear the file input value to allow re-uploading the same file
         if (fileInputRef.current) {
           fileInputRef.current.value = null;
         }
+      } else {
+        setUploadStatus(
+          `Upload failed: ${data.message || "Unknown error from backend"}`
+        );
+        toast.error(`Upload failed: ${data.message || "Unknown error"}`);
       }
-    } else {
-      setFileName(""); // Clear file name if no file is selected (e.g., user cancels file dialog)
+    } catch (error) {
+      console.error("Upload error:", error);
+      setUploadStatus(`Upload failed: ${error.message}`);
+      toast.error(`Upload error: ${error.message}`);
     }
+    // The 'finally' block from your original code to clear file input
+    // is implicitly handled because if an error occurs before success,
+    // the file input isn't cleared by the success block.
+    // However, if you want to ensure it's cleared even on API error (but after file selection),
+    // you could add it here, but typically you'd only clear it on success or if the user
+    // explicitly cancels/changes the file.
   };
 
   return (
@@ -118,6 +154,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
             <th>Payment Date</th>
             <th>Amount</th>
             <th>Attachment</th>
+            <th>Comment</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -168,9 +205,17 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
               </p>
             </td>
             <td>
+              <input
+                type="text"
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                placeholder="Enter comment"
+              />
+            </td>
+            <td>
               <button
                 className="Button"
-                onClick={uploadFunction}
+                onClick={handleSubmit}
                 disabled={
                   uploadStatus === "Uploading..." || !amount || !selectedDate
                 }

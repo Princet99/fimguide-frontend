@@ -176,6 +176,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
             <th>Payment Date</th>
             <th>Amount</th>
             <th>Status</th>
+            <th>Comments</th>
             <th>Attachment</th>
           </tr>
         </thead>
@@ -210,6 +211,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                   record.payer_role === "Lender" ? "lender-payment-row" : ""
                 } // Apply class for Lender payments
               >
+                {console.log(record)}
                 <td>
                   {record.payment_date
                     ? formatDateToYYYYMMDD(new Date(record.payment_date))
@@ -262,6 +264,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                     "Verification Pending"
                   )}
                 </td>
+                <td>{record.comment}</td>
                 <td>
                   {record.receipt_url ? (
                     <a
