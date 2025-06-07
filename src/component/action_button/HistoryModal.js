@@ -165,7 +165,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
   return (
     <div className="table-popup">
       <div className="table-header">
-        <h2>Payment History</h2>
+        <h2>Confirmation History</h2>
         <button className="close-button" onClick={onClose}>
           &times;
         </button>

@@ -43,18 +43,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedFile) {
-      toast.warn("Please select a file to upload.");
-      setUploadStatus("No file selected.");
-      return;
-    }
 
-    // Basic validation for other fields (add more as needed)
-    if (!Loanno || !selectedDate || !amount || !selectedrole) {
-      toast.warn("Please fill all required fields before uploading.");
-      setUploadStatus("Missing required fields.");
-      return;
-    }
 
     setUploadStatus("Uploading...");
     const formData = new FormData();
@@ -82,7 +71,18 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
         // Note: 'Content-Type' header is automatically set by the browser
         // for FormData, so you don't usually need to set it manually.
       });
+      if (!selectedFile) {
+        toast.warn("Please select a file to upload.");
+        setUploadStatus("No file selected.");
+        return;
+      }
 
+      // Basic validation for other fields (add more as needed)
+      if (!Loanno || !selectedDate || !amount || !selectedrole) {
+        toast.warn("Please fill all required fields before uploading.");
+        setUploadStatus("Missing required fields.");
+        return;
+      }
       // It's good practice to check if the response is JSON before parsing
       const contentType = response.headers.get("content-type");
       let data;
@@ -132,12 +132,6 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
       setUploadStatus(`Upload failed: ${error.message}`);
       toast.error(`Upload error: ${error.message}`);
     }
-    // The 'finally' block from your original code to clear file input
-    // is implicitly handled because if an error occurs before success,
-    // the file input isn't cleared by the success block.
-    // However, if you want to ensure it's cleared even on API error (but after file selection),
-    // you could add it here, but typically you'd only clear it on success or if the user
-    // explicitly cancels/changes the file.
   };
 
   return (
