@@ -58,8 +58,6 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
     // In a real Canvas app, you might not use process.env directly in the browser.
     // This is kept for consistency with your original code.
     const apiUrl =
-      typeof process !== "undefined" &&
-      process.env &&
       process.env.REACT_APP_ENV === "production"
         ? "https://fimguide-backend.onrender.com"
         : "http://localhost:3030"; // Default to localhost if process is not defined (e.g. in simple browser env)
