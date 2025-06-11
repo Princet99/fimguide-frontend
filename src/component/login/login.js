@@ -63,7 +63,6 @@ const Login = ({ setIsLoggedIn, setUser }) => {
 
   return (
     <div className="login-container">
-      <h2>Login</h2>
       {isAuthenticated ? (
         <div>
           <h3>Hello, {user?.name}</h3>
@@ -73,7 +72,7 @@ const Login = ({ setIsLoggedIn, setUser }) => {
         </div>
       ) : (
         <button onClick={handleAuth0Login} className="login-btn">
-          Login with Auth0
+          Login
         </button>
       )}
     </div>

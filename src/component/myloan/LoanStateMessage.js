@@ -1,4 +1,3 @@
-import React from "react";
 import "./LoanStateMessage.css";
 
 const LoanStateMessage = ({
@@ -16,7 +15,7 @@ const LoanStateMessage = ({
           ${amount}
           <span className="loan-state-message">
             {/* Display Question Mark with Tooltip */}
-            {loan_state?.due_history.length > 0 && (
+            {loan_state?.due_history?.length > 0 && (
               <div className="ml-2 relative inline-block group">
                 {/* Trigger Element */}
                 <span className="tooltip-trigger" title="Hover for details">

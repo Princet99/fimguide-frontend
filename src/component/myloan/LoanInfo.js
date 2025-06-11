@@ -6,12 +6,12 @@ const LoanInfo = ({ role, amountDue, dueDate }) => (
     <div className="Payment_Due">
       <span>
         {role === "borrower"
-          ? `Amount Due: $${amountDue}`
+          ? `Amount due from borrower: $${amountDue}`
           : `Amount to be Received: $${amountDue}`}
       </span>
     </div>
     <div className="Payment_Due_Date">
-      <span>Due Date: {dueDate}</span>
+      <span>Due: {dueDate}</span>
     </div>
   </div>
 );

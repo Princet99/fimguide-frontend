@@ -153,6 +153,7 @@ const MyLoan = () => {
       });
   }, [apiUrl, userId, selectedLoanNumber]);
   console.log(Loanno, "selectedLoanNumber");
+  console.log(selectedrole)
 
   // This hook for displaying Loan Details
   useEffect(() => {
@@ -344,13 +345,13 @@ const MyLoan = () => {
                   </div>
                 </div> */}
                 <div className="upload-section">
-                  <div class="item-1">
-                    <button class="btn" onClick={handleOpenUploadModal}>
+                  <div className="item-1">
+                    <button className="btn" onClick={handleOpenUploadModal}>
                       Upload
                     </button>
                   </div>
-                  <div class="item-2">
-                    <button class="btn" onClick={handleOpenHistoryModal}>
+                  <div className="item-2">
+                    <button className="btn" onClick={handleOpenHistoryModal}>
                       Confirmation History
                     </button>
                   </div>
@@ -522,7 +523,7 @@ const MyLoan = () => {
                   />
                 </div>
 
-                <button class="btn" type="submit">
+                <button className="btn" type="submit">
                   Submit
                 </button>
               </form>

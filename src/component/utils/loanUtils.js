@@ -21,7 +21,8 @@ export const formatNumber = (value, locale = undefined, options = {}) => {
 };
 
 export const getLoanMessage = (loandata, currentDate) => {
-  const { loan_state, loan_details, role } = loandata || {};
+  console.log(loandata , "loan data");
+  const { loan_state, loan_details, role , coming_up } = loandata || {};
   const loanStatus = loan_details?.status;
   // const loanDate = new Date(loan_state?.date);
   // console.log(loan_state);
@@ -69,7 +70,15 @@ export const getLoanMessage = (loandata, currentDate) => {
         date: loan_state.loan_schedule_date,
       };
     }
-  } else if (loan_state?.total_due > 0) {
+  }
+  // else if (coming_up?.amount_due) {
+  //   return {
+  //     message: "Next payment due",
+  //     amount: coming_up.amount_due,
+  //     instructions: `by ${coming_up.due_date}`,
+  //   };
+  // }
+   else if (loan_state?.total_due > 0) {
     if (loan_state?.status === "On time" && role === "borrower") {
       return {
         message: "You have a past due balance!",
@@ -90,6 +99,5 @@ export const getLoanMessage = (loandata, currentDate) => {
       };
     }
   }
-
-  return { message: "No outstanding actions required." };
+  return { message: "" };
 };

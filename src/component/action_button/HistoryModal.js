@@ -190,14 +190,14 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
           )}
           {historyError && (
             <tr>
-              <td colSpan="4" style={{ textAlign: "center", color: "red" }}>
+              <td colSpan="5" style={{ textAlign: "center", color: "red" }}>
                 {historyError}
               </td>
             </tr>
           )}
           {!historyLoading && !historyError && paymentHistory.length === 0 && (
             <tr>
-              <td colSpan="4" style={{ textAlign: "center" }}>
+              <td colSpan="5" style={{ textAlign: "center" }}>
                 No payment history found.
               </td>
             </tr>
@@ -240,26 +240,23 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                         )
                       }
                     >
-                      <option value="" disabled>
-                        Unverified
-                      </option>
-                      <option value="1">Wrong Amount</option>
-                      <option value="2">Wrong date</option>
-                      <option value="3">Not received</option>
-                      <option value="4">Verified</option>
-                      <option value="5">Checking</option>
+                      <option value="1">Unverified</option>
+                      <option value="2">Not received</option>
+                      <option value="3">Wrong amount</option>
+                      <option value="4">Wrong date</option>
+                      <option value="5">Verified</option>
                     </select>
                   ) : // If current user's role is the SAME as payer's role, show static text
                   record.verification_status === 1 ? (
-                    "Wrong Amount"
+                    "Unverified"
                   ) : record.verification_status === 2 ? (
-                    "Wrong date"
-                  ) : record.verification_status === 3 ? (
                     "Not received"
+                  ) : record.verification_status === 3 ? (
+                    "Wrong amount"
                   ) : record.verification_status === 4 ? (
-                    "Verified"
+                    "Wrong date"
                   ) : record.verification_status === 5 ? (
-                    "Checking"
+                    "Verified"
                   ) : (
                     "Verification Pending"
                   )}
