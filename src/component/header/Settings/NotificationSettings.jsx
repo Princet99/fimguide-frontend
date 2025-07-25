@@ -49,13 +49,20 @@ const NotificationSettings = () => {
   // --- React Query Hooks ---
 
   // Query to fetch existing notification settings using the user's ID
-  const { data: settingsData, isLoading: areSettingsLoading } = useQuery({
+  const {
+    data: settingsData,
+    isLoading: areSettingsLoading,
+    isError, 
+    error, 
+  } = useQuery({
     queryKey: ["notificationSettings", userId],
     queryFn: () => fetchNotificationSettings(userId),
-    enabled: !!userId, // This query runs as soon as the userId is available
-    onError: (error) => {
-      if (error.response?.status !== 404) {
-        console.error("Error fetching notification settings:", error);
+    enabled: !!userId,
+    retry : false,
+    // You can simplify onError now, as useEffect will handle the 404 toast.
+    onError: (err) => {
+      if (err.response?.status !== 404) {
+        console.error("Error fetching notification settings:", err);
         toast.error("Failed to load your notification settings.");
       }
     },
@@ -64,16 +71,20 @@ const NotificationSettings = () => {
   // **FIX:** Use useEffect to reliably sync query data with local state.
   // This ensures the UI updates correctly even when data is served from cache.
   useEffect(() => {
-    if (settingsData) {
-      // Use the correct keys from the API response
+    // Check if settingsData is a non-empty object before trying to use it.
+    if (settingsData && Object.keys(settingsData).length > 0) {
+      // Data exists, so populate the form state from the API response
       setEmailNotifications(!!settingsData.nr_is_enabled); // Convert 1/0 to boolean
-      setReminderDays(settingsData.nr_interval_days ?? 7); // Default to 7 if null/undefined
-      // Optionally update the email field from the rule's email
+      setReminderDays(settingsData.nr_interval_days ?? 7); // Default to 7 if null
       if (settingsData.nr_email) {
         setEmail(settingsData.nr_email);
       }
+    } else {
+      // This 'else' block handles the case where no settings are found (e.g., new user).
+      // The component will simply use the initial useState values, which is the correct default behavior.
+      // No action needed here, but it makes the logic explicit.
     }
-  }, [settingsData]); // This effect runs whenever the fetched data changes.
+  }, [settingsData]);
 
   // Mutation to save notification settings
   const saveSettingsMutation = useMutation({
@@ -124,6 +135,16 @@ const NotificationSettings = () => {
       setReminderDays(value);
     }
   };
+
+  // useEffect hook after your useQuery
+  useEffect(() => {
+    // Check if the query has an error and the status is 404
+    if (isError && error?.response?.status === 404) {
+      toast.info(
+        "Welcome! To receive reminders, please confirm your email and opt-in below."
+      );
+    }
+  }, [isError, error]); // This effect runs when the error state changes
 
   // --- Render Logic ---
 
