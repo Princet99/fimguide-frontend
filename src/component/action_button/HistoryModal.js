@@ -1,166 +1,106 @@
-import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import axios from "axios";
 
-// Helper function to format Date object to YYYY/MM/DD string
+// --- API Functions (moved outside for clarity) ---
+
+const apiUrl =
+  process.env.REACT_APP_ENV === "production"
+    ? "https://fimguide-backend.onrender.com"
+    : "http://localhost:3030";
+
+// 1. Function to fetch and process payment history
+const fetchPaymentHistory = async (loanno) => {
+  const { data } = await axios.get(`${apiUrl}/api/photo/${loanno}`);
+
+  // Separate lender and borrower payments
+  const lenderPayments = data.filter(
+    (record) => record.payer_role === "Lender"
+  );
+  const borrowerPayments = data.filter(
+    (record) => record.payer_role === "Borrower"
+  );
+
+  // Sort both lists by date (newest first)
+  const sortDescByDate = (a, b) =>
+    new Date(b.payment_date) - new Date(a.payment_date);
+  lenderPayments.sort(sortDescByDate);
+  borrowerPayments.sort(sortDescByDate);
+
+  // Return lender payments first, then borrower payments
+  return [...lenderPayments, ...borrowerPayments];
+};
+
+// 2. Function to update verification status
+const updateVerificationStatus = async ({ recordId, newStatus }) => {
+  const { data } = await axios.put(
+    `${apiUrl}/api/photo/paymentverification/${recordId}`,
+    {
+      verification_status: parseInt(newStatus, 10),
+    }
+  );
+  return data;
+};
+
+// --- Helper Functions ---
+
 const formatDateToYYYYMMDD = (date) => {
-  if (!date) {
-    return "";
-  }
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  if (!date) return "N/A";
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
   return `${year}/${month}/${day}`;
 };
 
+const formatNumber = (value) => {
+  const safeValue = Number(value) || 0;
+  return safeValue.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
+
+// --- Component ---
+
 const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
-  const [paymentHistory, setPaymentHistory] = useState([]);
-  const [historyLoading, setHistoryLoading] = useState(false);
-  const [historyError, setHistoryError] = useState(null);
+  const queryClient = useQueryClient();
 
-  const apiUrl =
-    process.env.REACT_APP_ENV === "production"
-      ? "https://fimguide-backend.onrender.com"
-      : "http://localhost:3030";
-
-  console.log(apiUrl);
-  useEffect(() => {
-    const fetchAndCheckPaymentHistory = async () => {
-      if (!Loanno) {
-        console.warn("Loanno is not defined. Skipping fetch.");
-        return;
+  // 1. Use useQuery to fetch data
+  const {
+    data: paymentHistory = [], // Default to empty array
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["paymentHistory", Loanno],
+    queryFn: () => fetchPaymentHistory(Loanno),
+    enabled: !!Loanno, // Only run query if Loanno is available
+    onSuccess: (data) => {
+      // Side-effect: Check for pending verifications on successful fetch
+      if (data.some((record) => record.verification_status === 0)) {
+        toast.warning("Payment verification is pending.");
       }
+    },
+  });
 
-      setHistoryLoading(true);
-      setHistoryError(null);
+  // 2. Use useMutation to handle updates
+  const mutation = useMutation({
+    mutationFn: updateVerificationStatus,
+    onSuccess: () => {
+      // On success, invalidate the query to re-fetch fresh data
+      toast.success("Status updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["paymentHistory", Loanno] });
+    },
+    onError: (err) => {
+      toast.error(`Failed to update status: ${err.message}`);
+    },
+  });
 
-      try {
-        const response = await fetch(`${apiUrl}/api/photo/${Loanno}`);
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(
-            `HTTP error! Status: ${response.status}, Message: ${
-              errorData.message || response.statusText
-            }`
-          );
-        }
-
-        const data = await response.json();
-        setPaymentHistory(data);
-
-        // Check for pending verifications
-        const hasPendingVerification = data.some(
-          (record) => record.verification_status === 0
-        );
-        console.log("Pending verification found:", hasPendingVerification);
-        if (hasPendingVerification) {
-          toast.warning("Payment verification is pending.");
-        }
-      } catch (error) {
-        console.error("Failed to fetch payment history:", error);
-        setHistoryError(`Failed to fetch history: ${error.message}`);
-      } finally {
-        setHistoryLoading(false);
-      }
-    };
-
-    fetchAndCheckPaymentHistory();
-  }, [Loanno]);
-
-  const fetchPaymentHistory = async (Loanno) => {
-    setHistoryLoading(true);
-    setHistoryError(null);
-    try {
-      const response = await fetch(`${apiUrl}/api/photo/${Loanno}`);
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          `HTTP error! Status: ${response.status}, Message: ${
-            errorData.message || response.statusText
-          }`
-        );
-      }
-      const data = await response.json();
-
-      // Separate lender and borrower payments
-      const lenderPayments = data.filter(
-        (record) => record.payer_role === "Lender"
-      );
-      const borrowerPayments = data.filter(
-        (record) => record.payer_role === "Borrower"
-      );
-
-      // Sort lender payments by date (newest first)
-      lenderPayments.sort(
-        (a, b) => new Date(b.payment_date) - new Date(a.payment_date)
-      );
-
-      // Sort borrower payments by date (newest first)
-      borrowerPayments.sort(
-        (a, b) => new Date(b.payment_date) - new Date(a.payment_date)
-      );
-
-      // Concatenate lender payments (pinned) followed by borrower payments
-      setPaymentHistory([...lenderPayments, ...borrowerPayments]);
-    } catch (error) {
-      setHistoryError(`Failed to fetch history: ${error.message}`);
-      setPaymentHistory([]);
-    } finally {
-      setHistoryLoading(false);
-    }
+  // Handler now calls the mutation
+  const handleVerificationStatusChange = (recordId, newStatus) => {
+    mutation.mutate({ recordId, newStatus });
   };
-
-  const handleVerificationStatusChange = async (recordId, newStatus) => {
-    try {
-      const response = await fetch(
-        `${apiUrl}/api/photo/paymentverification/${recordId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            verification_status: parseInt(newStatus, 10),
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          `HTTP error! Status: ${response.status}, Message: ${
-            errorData.message || response.statusText
-          }`
-        );
-      }
-
-      setPaymentHistory((prevHistory) =>
-        prevHistory.map((record) =>
-          record.cfid === recordId
-            ? { ...record, verification_status: parseInt(newStatus, 10) }
-            : record
-        )
-      );
-    } catch (error) {
-      // Use a custom modal or toast for alerts instead of window.alert
-      console.error(`Failed to update status: ${error.message}`);
-      // Re-fetch to ensure data consistency if update fails
-      if (Loanno) {
-        fetchPaymentHistory(Loanno);
-      }
-    }
-  };
-
-  const formatNumber = (value, locale = undefined, options = {}) => {
-    const safeValue = Number(value) || 0;
-
-    return safeValue.toLocaleString(locale, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-      ...options,
-    });
-  };
-
-  // Toast Notification
 
   return (
     <div className="table-popup">
@@ -181,41 +121,38 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
           </tr>
         </thead>
         <tbody>
-          {historyLoading && (
+          {isLoading && (
             <tr>
-              <td colSpan="4" style={{ textAlign: "center" }}>
+              <td colSpan="5" style={{ textAlign: "center" }}>
                 Loading history...
               </td>
             </tr>
           )}
-          {historyError && (
+          {isError && (
             <tr>
               <td colSpan="5" style={{ textAlign: "center", color: "red" }}>
-                {historyError}
+                {`Failed to fetch history: ${error.message}`}
               </td>
             </tr>
           )}
-          {!historyLoading && !historyError && paymentHistory.length === 0 && (
+          {!isLoading && !isError && paymentHistory.length === 0 && (
             <tr>
               <td colSpan="5" style={{ textAlign: "center" }}>
                 No payment history found.
               </td>
             </tr>
           )}
-          {!historyLoading &&
-            !historyError &&
+          {!isLoading &&
+            !isError &&
             paymentHistory.map((record) => (
               <tr
-                key={record.cfid} // Use cfid as the unique key
+                key={record.cfid}
                 className={
                   record.payer_role === "Lender" ? "lender-payment-row" : ""
-                } // Apply class for Lender payments
+                }
               >
-                {console.log(record)}
                 <td>
-                  {record.payment_date
-                    ? formatDateToYYYYMMDD(new Date(record.payment_date))
-                    : "N/A"}
+                  {formatDateToYYYYMMDD(record.payment_date)}
                   {record.payer_role === "Lender" && (
                     <span className="lender-payment-badge">
                       {" "}
@@ -225,20 +162,19 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                 </td>
                 <td>${formatNumber(record.amount)}</td>
                 <td>
-                  {/* BEGIN UPDATED SNIPPET: Conditional rendering for verification status */}
-                  {console.log("selected role : ", selectedrole)}
-                  {console.log("Payer role : ", record.payer_role)}
                   {selectedrole !== record.payer_role ? (
-                    // If current user's role is DIFFERENT from payer's role, show dropdown
+                    // If current user's role is DIFFERENT, show dropdown
                     <select
                       className="History_Modal_Select"
-                      value={record.verification_status || ""} // Ensure value is not null/undefined for select
+                      value={record.verification_status || ""}
                       onChange={(e) =>
                         handleVerificationStatusChange(
                           record.cfid,
                           e.target.value
                         )
                       }
+                      // Disable dropdown while an update is in progress
+                      disabled={mutation.isLoading}
                     >
                       <option value="1">Unverified</option>
                       <option value="2">Not received</option>
@@ -246,19 +182,15 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                       <option value="4">Wrong date</option>
                       <option value="5">Verified</option>
                     </select>
-                  ) : // If current user's role is the SAME as payer's role, show static text
-                  record.verification_status === 1 ? (
-                    "Unverified"
-                  ) : record.verification_status === 2 ? (
-                    "Not received"
-                  ) : record.verification_status === 3 ? (
-                    "Wrong amount"
-                  ) : record.verification_status === 4 ? (
-                    "Wrong date"
-                  ) : record.verification_status === 5 ? (
-                    "Verified"
                   ) : (
-                    "Verification Pending"
+                    // If current user's role is the SAME, show static text
+                    {
+                      1: "Unverified",
+                      2: "Not received",
+                      3: "Wrong amount",
+                      4: "Wrong date",
+                      5: "Verified",
+                    }[record.verification_status] || "Verification Pending"
                   )}
                 </td>
                 <td>{record.comment}</td>

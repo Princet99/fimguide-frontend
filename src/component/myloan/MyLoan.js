@@ -12,9 +12,9 @@ import HistoryModal from "../action_button/HistoryModal";
 // API State Management using Axios and React-Query
 
 const apiUrl =
-  process.env.REACT_APP_ENV === "production" // Corrected: "productions" -> "production"
+  process.env.REACT_APP_ENV === "production"
     ? "https://fimguide-backend.onrender.com"
-    : "http://localhost:3030"; // Corrected: More common to use http for local dev
+    : "http://localhost:3030";
 
 // Fetches User Details by auth0_sub
 const fetchUserDetails = async (token, auth0Sub) => {
@@ -56,7 +56,7 @@ const connectUserAccount = async ({ token, id, auth0_sub }) => {
 const MyLoan = () => {
   const { getAccessTokenSilently, loginWithRedirect, isAuthenticated } =
     useAuth0();
-  const queryClient = useQueryClient(); // Corrected: Initialized queryClient
+  const queryClient = useQueryClient();
   const [selectedLoanDetails, setSelectedLoanDetails] = useState(null);
   const [selectedLoanNumber, setSelectedLoanNumber] = useState("");
   const [selectedrole, setselectedrole] = useState("");
@@ -79,8 +79,13 @@ const MyLoan = () => {
 
   // --- React Query Hooks ---
 
-  // 1. Query to fetch user details
-  const userQuery = useQuery({
+  // 1. Query to fetch user details (FIXED: Destructured properties)
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["user", users?.sub],
     queryFn: async () => {
       const token = await getAccessTokenSilently({
@@ -92,6 +97,7 @@ const MyLoan = () => {
       return fetchUserDetails(token, users.sub);
     },
     enabled: !!(isAuthenticated && users?.sub),
+    retry: false,
     onError: (e) => {
       if (e.error === "consent_required" || e.error === "login_required") {
         loginWithRedirect({
@@ -106,56 +112,45 @@ const MyLoan = () => {
     },
   });
 
-  const user = userQuery.data;
+  // UseEffect to handle user not registered
+  useEffect(() => {
+    if (isError && error?.response?.status === 404) {
+      toast.info(
+        "Enter the user code! Provided by the Admin"
+      );
+    }
+  }, [isError, error]);
+
   const userId = user?.details?.us_id || null;
   const email = user?.details?.us_email || null;
   sessionStorage.setItem("email", email);
   sessionStorage.setItem("userId", JSON.stringify(userId));
 
-  // 2. Query to fetch loan numbers
-  const loannoQuery = useQuery({
+  // 2. Query to fetch loan numbers (FIXED: Destructured properties)
+  const { data: Loanno, isSuccess: loannoIsSuccess } = useQuery({
     queryKey: ["loanNumbers", userId],
     queryFn: () => fetchLoanNumbers(userId),
     enabled: !!userId,
   });
-  const Loanno = loannoQuery.data;
 
-  // 3. Query to fetch details of the selected loan
-  const loanDetailsQuery = useQuery({
+  // 3. Query to fetch details of the selected loan (FIXED: Destructured properties)
+  const { data } = useQuery({
     queryKey: ["loanDetails", userId, selectedLoanNumber],
     queryFn: () => fetchLoanDetails(userId, selectedLoanNumber),
     enabled: !!userId && !!selectedLoanNumber,
   });
-  const data = loanDetailsQuery.data;
 
-  // 4. Query to fetch payment history
-  const paymentHistoryQuery = useQuery({
-    queryKey: ["paymentHistory", selectedLoanNumber],
-    queryFn: () => fetchPaymentHistory(selectedLoanNumber),
-    enabled: !!selectedLoanNumber,
-    onSuccess: (historyData) => {
-      if (historyData?.some((record) => record.verification_status === 0)) {
-        toast.warning("Payment verification is pending.");
-      }
-    },
-  });
-  const paymentHistory = paymentHistoryQuery.data || [];
-
-  // **FIXED**: Added back missing useEffect to process loan data for display
   useEffect(() => {
     if (!selectedLoanNumber || !data) {
       setSelectedLoanDetails(null);
       return;
     }
-
     const combinedLoans = { ...data.borrower, ...data.lender };
     const normalizedSelectedLoanNumber = selectedLoanNumber.toLowerCase();
     const matchedLoan = combinedLoans[normalizedSelectedLoanNumber];
-
     setSelectedLoanDetails(matchedLoan || null);
   }, [selectedLoanNumber, data]);
 
-  // Effect to set the default selected loan once loan numbers are fetched
   useEffect(() => {
     if (Loanno && Loanno.length > 0 && !selectedLoanNumber) {
       setSelectedLoanNumber(Loanno[0].loan_no);
@@ -163,7 +158,7 @@ const MyLoan = () => {
     }
   }, [Loanno, selectedLoanNumber]);
 
-  // 5. Mutation for connecting the user's Fim ID
+  // 4. Mutation for connecting the user's Fim ID
   const connectUserMutation = useMutation({
     mutationFn: connectUserAccount,
     onSuccess: () => {
@@ -171,7 +166,6 @@ const MyLoan = () => {
         position: "top-right",
         autoClose: 3000,
       });
-      // **FIXED**: Invalidate queries for a smooth refresh instead of a hard reload
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["loanNumbers"] });
     },
@@ -217,7 +211,8 @@ const MyLoan = () => {
     });
   };
 
-  if (userQuery.isLoading) {
+  // Use the destructured loading state
+  if (isUserLoading) {
     return <div>Loading....</div>;
   }
 
@@ -228,8 +223,8 @@ const MyLoan = () => {
 
   return (
     <>
-      {/* **FIXED**: Better conditional rendering based on query success */}
-      {loannoQuery.isSuccess && Loanno && Loanno.length > 0 ? (
+      {/* Use the destructured success state */}
+      {loannoIsSuccess && Loanno && Loanno.length > 0 ? (
         <div className="Content">
           <h1>Dashboard</h1>
           <div className="Loan-container">
@@ -238,7 +233,6 @@ const MyLoan = () => {
                 <select
                   className="loan-select"
                   value={selectedLoanNumber}
-                  // **FIXED**: onChange now correctly sets both role and loan number
                   onChange={(e) => {
                     const selected = Loanno.find(
                       (l) => l.loan_no === e.target.value
@@ -297,7 +291,6 @@ const MyLoan = () => {
               <HistoryModal
                 Loanno={selectedLoanNumber}
                 selectedrole={selectedrole}
-                paymentHistory={paymentHistory}
                 onClose={handleCloseHistoryModal}
               />
             )}
