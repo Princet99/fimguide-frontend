@@ -38,12 +38,6 @@ const fetchLoanDetails = async (userId, loanNo) => {
   return data.errors ? null : data;
 };
 
-// Fetches payment verification history for a specific loan
-const fetchPaymentHistory = async (loanNo) => {
-  const { data } = await axios.get(`${apiUrl}/paymentverification/${loanNo}`); // Corrected: "paymentverifications" -> "paymentverification"
-  return data;
-};
-
 // Updates user's auth0_sub (connect ID)
 const connectUserAccount = async ({ token, id, auth0_sub }) => {
   const { data } = await axios.post(
