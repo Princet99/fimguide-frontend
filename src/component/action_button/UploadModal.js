@@ -43,8 +43,6 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
   };
 
   const handleSubmit = async () => {
-
-
     setUploadStatus("Uploading...");
     const formData = new FormData();
     formData.append("image", selectedFile);
@@ -58,8 +56,6 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
     // In a real Canvas app, you might not use process.env directly in the browser.
     // This is kept for consistency with your original code.
     const apiUrl =
-      typeof process !== "undefined" &&
-      process.env &&
       process.env.REACT_APP_ENV === "production"
         ? "https://fimguide-backend.onrender.com"
         : "http://localhost:3030"; // Default to localhost if process is not defined (e.g. in simple browser env)
@@ -164,6 +160,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
                 dropdownMode="select"
                 dateFormat="yyyy/MM/dd"
                 isClearable
+                className="custom-datepicker"
               />
             </td>
             <td>
@@ -174,6 +171,10 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="Enter Amount"
                 required
+                style={{
+                  textAlign: "center",
+                  width: "100%",
+                }}
               />
             </td>
             <td>
@@ -204,6 +205,10 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder="Enter comment"
+                style={{
+                  textAlign: "center",
+                  width: "100%",
+                }}
               />
             </td>
             <td>

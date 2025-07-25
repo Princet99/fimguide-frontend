@@ -21,6 +21,14 @@
   background-color: #0056b3;
 }
 
+.react-datepicker-wrapper {
+  text-align: center;
+  width: 100%;
+  padding: 8px; /* Add some padding for better UI */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 /* Table Popup Styles */
 .table-popup {
   position: fixed;
@@ -34,6 +42,117 @@
   z-index: 1000;
   width: 100%;
   max-width: 1200px;
+}
+
+/* Mobile screen css */
+@media screen and (max-width: 768px) {
+  .table-popup {
+    padding: 15px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .table-header h2 {
+    font-size: 1.2em;
+  }
+
+  .custom-table {
+    border: 0;
+  }
+
+  .custom-table thead {
+    display: none;
+  }
+
+  .custom-table tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Make each TD a flex container */
+  .custom-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dotted #eee;
+  }
+
+  .custom-table td:last-child {
+    border-bottom: 0;
+    justify-content: center;
+  }
+
+
+  /* Style for the content (input, datepicker, upload label) within TD */
+  .custom-table td > *:not(.custom-table td::before) {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    /* Removed text-align from here, as we'll apply it specifically below */
+  }
+
+  /* Specific adjustments for number and text inputs */
+  .custom-table input[type="number"],
+  .custom-table input[type="text"] {
+    text-align: right; /* Keep number and text inputs right-aligned */
+    width: auto; /* Let flexbox control its width */
+  }
+
+  /* For the file upload section */
+  .upload-label {
+    flex-grow: 1;
+    justify-content: flex-end; /* Align upload button content to the right */
+    padding-left: 0;
+    padding-right: 0;
+    width: auto; /* Let flexbox manage width */
+  }
+
+  .file-name-display {
+    text-align: right; /* Align filename to the right */
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* The action button cell (last td) */
+  .custom-table td[data-label="Action"] {
+    display: flex;
+    justify-content: center;
+    padding-top: 15px;
+  }
+  .custom-table td[data-label="Action"]::before {
+      display: none;
+  }
+  .Button {
+    width: auto;
+    min-width: 120px;
+    margin-top: 0;
+  }
+}
+
+/* Further refinements for very small screens if needed */
+@media screen and (max-width: 480px) {
+  .table-popup {
+    padding: 10px;
+  }
+
+  .table-header h2 {
+    font-size: 1.1em;
+  }
+
+  .custom-table td {
+    padding: 6px 0;
+  }
+
+  .custom-table td::before {
+    margin-right: 10px;
+    max-width: 45%;
+  }
 }
 
 .table-header {

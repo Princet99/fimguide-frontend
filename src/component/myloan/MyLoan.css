@@ -1,6 +1,21 @@
 body {
   font-family: sans-serif;
 }
+
+@media (max-width: 768px) {
+  body {
+    grid-template-columns: 1fr;
+    font-size: 14px;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+  body {
+    font-size: 12px;
+    gap: 10px;
+  }
+}
 /* button style default for all */
 /* Default button styles */
 .btn {
@@ -128,6 +143,19 @@ body {
   display: flex;
   gap: 10px;
   width: 100%;
+}
+/* Mobile */
+@media (max-width: 480px) {
+  .first-row {
+    flex-direction: column;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .first-row {
+    flex-direction: column;
+  }
 }
 
 /* Grid coming up */
@@ -371,4 +399,18 @@ option {
   margin: 0 auto 25px;
   display: flex;
   justify-content: space-evenly;
+}
+
+@media (max-width: 480px) {
+  .upload-section{
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-section{
+    flex-direction: column;
+    gap: 10px;
+  }
 }

@@ -17,9 +17,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
+  
   const { logout } = useAuth0(); // Get Auth0 logout function
-
+  
   const handleLogout = () => {
     console.log("App.js: handleLogout called");
     setIsLoggedIn(false);
@@ -32,7 +32,7 @@ function App() {
     setIsLoggedIn(false); // Set login state to false
     toast.success("Logged out successfully!");
   };
-
+  
   return (
     <Router>
       <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} user={user} />

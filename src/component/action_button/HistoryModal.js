@@ -34,7 +34,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
       setHistoryError(null);
 
       try {
-        const response = await fetch(`${apiUrl}/paymentverification/${Loanno}`);
+        const response = await fetch(`${apiUrl}/api/photo/${Loanno}`);
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(
@@ -70,7 +70,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
     setHistoryLoading(true);
     setHistoryError(null);
     try {
-      const response = await fetch(`${apiUrl}/paymentverification/${Loanno}`);
+      const response = await fetch(`${apiUrl}/api/photo/${Loanno}`);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
@@ -112,7 +112,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
   const handleVerificationStatusChange = async (recordId, newStatus) => {
     try {
       const response = await fetch(
-        `${apiUrl}/paymentverification/${recordId}`,
+        `${apiUrl}/api/photo/paymentverification/${recordId}`,
         {
           method: "PUT",
           headers: {

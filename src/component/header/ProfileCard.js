@@ -1,4 +1,6 @@
+// src/components/ProfileCard.jsx
 import React, { useState, useRef, useEffect } from "react";
+import SettingsModal from "./settingsModal"; // Import the new SettingsModal component
 
 const ProfileCard = ({
   isLoggedIn,
@@ -8,17 +10,19 @@ const ProfileCard = ({
   onSignUp,
   onLogout,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); // New state for settings modal
   const profileCardRef = useRef(null);
 
-  // Close the card when clicking outside of it
+  // Close the profile card when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         profileCardRef.current &&
-        !profileCardRef.current.contains(event.target)
+        !profileCardRef.current.contains(event.target) &&
+        !isSettingsModalOpen // Don't close if settings modal is open
       ) {
-        setIsOpen(false);
+        setIsProfileCardOpen(false);
       }
     };
 
@@ -26,12 +30,21 @@ const ProfileCard = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isSettingsModalOpen]); // Depend on isSettingsModalOpen to prevent premature closing
 
-  const toggleCard = () => {
+  const toggleProfileCard = () => {
     if (isLoggedIn) {
-      setIsOpen(!isOpen);
+      setIsProfileCardOpen(!isProfileCardOpen);
     }
+  };
+
+  const openSettingsModal = () => {
+    setIsSettingsModalOpen(true);
+    setIsProfileCardOpen(false); // Close the profile card when opening settings
+  };
+
+  const closeSettingsModal = () => {
+    setIsSettingsModalOpen(false);
   };
 
   return (
@@ -43,7 +56,7 @@ const ProfileCard = ({
             src={profilePic}
             alt="Profile"
             style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-            onClick={toggleCard}
+            onClick={toggleProfileCard}
           />
         ) : (
           <>
@@ -78,7 +91,7 @@ const ProfileCard = ({
       </div>
 
       {/* Profile Card (only visible when logged in and expanded) */}
-      {isLoggedIn && isOpen && (
+      {isLoggedIn && isProfileCardOpen && (
         <div
           style={{
             position: "absolute",
@@ -96,11 +109,28 @@ const ProfileCard = ({
           <div style={{ textAlign: "center", marginBottom: "16px" }}>
             <img
               src={profilePic}
-              alt="Profile"
+              alt=""
               style={{ width: "60px", height: "60px", borderRadius: "50%" }}
             />
             <p style={{ margin: "8px 0 0", fontWeight: "bold" }}>{userName}</p>
           </div>
+
+          {/* Settings Button */}
+          <button
+            onClick={openSettingsModal} // New handler to open settings
+            style={{
+              width: "100%",
+              padding: "8px",
+              backgroundColor: "#6c757d",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              marginBottom: "8px",
+            }}
+          >
+            Settings
+          </button>
 
           {/* Logout Button */}
           <button
@@ -118,6 +148,11 @@ const ProfileCard = ({
             Logout
           </button>
         </div>
+      )}
+
+      {/* Settings Modal */}
+      {isSettingsModalOpen && (
+        <SettingsModal onClose={closeSettingsModal} userName={userName} />
       )}
     </div>
   );
