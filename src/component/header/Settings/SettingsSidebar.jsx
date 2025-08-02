@@ -5,7 +5,7 @@ const SettingsSidebar = ({ activeSection, setActiveSection }) => {
   const sidebarItems = [
     { id: "account", label: "Account Settings" },
     { id: "notifications", label: "Notifications" },
-    { id: "documentView", label: "Document View" },
+    // { id: "documentView", label: "Document View" }, Disabled Feature for now
     // Add more settings sections here
   ];
 
