@@ -162,8 +162,9 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                 </td>
                 <td>${formatNumber(record.amount)}</td>
                 <td>
-                  {selectedrole !== record.payer_role ? (
-                    // If current user's role is DIFFERENT, show dropdown
+                  {selectedrole !== record.payer_role &&
+                  record.verification_status !== 5 ? (
+                    // Show dropdown ONLY if role is different AND status is NOT 'Verified'
                     <select
                       className="History_Modal_Select"
                       value={record.verification_status || ""}
@@ -173,7 +174,6 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                           e.target.value
                         )
                       }
-                      // Disable dropdown while an update is in progress
                       disabled={mutation.isLoading}
                     >
                       <option value="1">Unverified</option>
@@ -183,7 +183,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                       <option value="5">Verified</option>
                     </select>
                   ) : (
-                    // If current user's role is the SAME, show static text
+                    // Otherwise, show static text
                     {
                       1: "Unverified",
                       2: "Not received",
