@@ -162,6 +162,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
                 dateFormat="yyyy/MM/dd"
                 isClearable
                 className="custom-datepicker"
+                maxDate={new Date()}
               />
             </td>
             <td>
