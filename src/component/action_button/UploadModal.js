@@ -57,6 +57,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
   const [comments, setComments] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [fileName, setFileName] = useState("");
+  const [paymentMethod, setpaymentMethod] = useState("");
   const fileInputRef = useRef(null);
 
   // Mutation for sending the email notification
@@ -88,6 +89,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
       setFileName("");
       setSelectedDate(null);
       setAmount("");
+      setpaymentMethod("");
       setComments("");
       if (fileInputRef.current) {
         fileInputRef.current.value = null;
@@ -109,7 +111,14 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
   };
 
   const handleSubmit = () => {
-    if (!selectedFile || !Loanno || !selectedDate || !amount || !selectedrole) {
+    if (
+      !selectedFile ||
+      !Loanno ||
+      !selectedDate ||
+      !amount ||
+      !selectedrole ||
+      !paymentMethod
+    ) {
       toast.warn("Please fill all required fields before uploading.");
       return;
     }
@@ -119,6 +128,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
     formData.append("luid", Loanno);
     formData.append("payment_date", formatDateToYYYYMMDD(selectedDate));
     formData.append("amount", amount);
+    formData.append("paymentMethod", paymentMethod);
     formData.append("comments", comments);
     formData.append("payer_role", selectedrole);
 
@@ -148,6 +158,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
             <th>Payment Date</th>
             <th>Amount</th>
             <th>Attachment</th>
+            <th>Payment Method</th>
             <th>Comment</th>
             <th>Action</th>
           </tr>
@@ -162,6 +173,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
                 dateFormat="yyyy/MM/dd"
                 isClearable
                 className="custom-datepicker"
+                maxDate={new Date()}
               />
             </td>
             <td>
@@ -194,6 +206,23 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
               >
                 {fileName}
               </p>
+            </td>
+            {/* Payment Method Row */}
+            <td>
+              <select
+                name="select-payment"
+                id="select-payment"
+                value={paymentMethod}
+                onChange={(e) => setpaymentMethod(e.target.value)}
+              >
+                <option value="" selected disabled>
+                  Select Payment Option
+                </option>
+                <option value="Zelle">Zelle</option>
+                <option value="Paypal">Paypal</option>
+                <option value="Venmo">Venmo</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+              </select>
             </td>
             <td>
               <input

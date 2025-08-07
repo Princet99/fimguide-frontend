@@ -13,22 +13,10 @@ const apiUrl =
 const fetchPaymentHistory = async (loanno) => {
   const { data } = await axios.get(`${apiUrl}/api/photo/${loanno}`);
 
-  // Separate lender and borrower payments
-  const lenderPayments = data.filter(
-    (record) => record.payer_role === "Lender"
-  );
-  const borrowerPayments = data.filter(
-    (record) => record.payer_role === "Borrower"
-  );
-
   // Sort both lists by date (newest first)
-  const sortDescByDate = (a, b) =>
-    new Date(b.payment_date) - new Date(a.payment_date);
-  lenderPayments.sort(sortDescByDate);
-  borrowerPayments.sort(sortDescByDate);
+  data.sort((a, b) => new Date(b.payment_date) - new Date(a.payment_date));
 
-  // Return lender payments first, then borrower payments
-  return [...lenderPayments, ...borrowerPayments];
+  return data;
 };
 
 // 2. Function to update verification status
@@ -115,6 +103,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
           <tr>
             <th>Payment Date</th>
             <th>Amount</th>
+            <th>Payment Method</th>
             <th>Status</th>
             <th>Comments</th>
             <th>Attachment</th>
@@ -142,6 +131,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
               </td>
             </tr>
           )}
+          {/* Confirmation History Data */}
           {!isLoading &&
             !isError &&
             paymentHistory.map((record) => (
@@ -161,6 +151,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                   )}
                 </td>
                 <td>${formatNumber(record.amount)}</td>
+                <td>{record.payment_method}</td>
                 <td>
                   {selectedrole !== record.payer_role &&
                   record.verification_status !== 5 ? (
