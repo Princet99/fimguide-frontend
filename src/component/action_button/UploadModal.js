@@ -221,7 +221,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
                 <option value="Zelle">Zelle</option>
                 <option value="Paypal">Paypal</option>
                 <option value="Venmo">Venmo</option>
-                <option value="Others">Bank Transfer</option>
+                <option value="Bank Transfer">Bank Transfer</option>
               </select>
             </td>
             <td>
