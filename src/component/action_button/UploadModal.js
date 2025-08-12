@@ -125,7 +125,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
 
     const formData = new FormData();
     formData.append("image", selectedFile);
-    formData.append("luid", Loanno);
+    formData.append("ln_no", Loanno);
     formData.append("payment_date", formatDateToYYYYMMDD(selectedDate));
     formData.append("amount", amount);
     formData.append("paymentMethod", paymentMethod);
@@ -155,6 +155,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
       <table className="custom-table">
         <thead>
           <tr>
+            <th>From</th>
             <th>Payment Date</th>
             <th>Amount</th>
             <th>Attachment</th>
@@ -165,6 +166,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
         </thead>
         <tbody>
           <tr>
+            <td>{selectedrole}</td>
             <td>
               <DatePicker
                 selected={selectedDate}
@@ -179,7 +181,8 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
             <td>
               <input
                 type="number"
-                step="0.01"
+                step="1"
+                min="0"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="Enter Amount"

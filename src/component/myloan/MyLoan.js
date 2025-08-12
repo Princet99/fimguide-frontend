@@ -283,6 +283,7 @@ const MyLoan = () => {
             {isUploadModalOpen && (
               <UploadModal
                 Loanno={selectedLoanNumber}
+                role = {selectedrole}
                 onClose={handleCloseUploadModal}
                 selectedrole={selectedrole}
               />
