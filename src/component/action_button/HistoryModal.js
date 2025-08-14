@@ -248,7 +248,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                                       borderRadius: "4px",
                                     }}
                                   >
-                                    Yes
+                                    Ok
                                   </button>
                                   <button
                                     onClick={() => {
@@ -265,7 +265,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                                       borderRadius: "4px",
                                     }}
                                   >
-                                    No
+                                    Cancel
                                   </button>
                                 </div>
                               </div>
@@ -324,7 +324,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                       }
                     />
                   ) : (
-                    <span>{record.comment_lender || "N/A"}</span>
+                    <span>{record.comment_lender || ""}</span>
                   )}
                 </td>
               </tr>
