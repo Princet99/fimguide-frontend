@@ -172,7 +172,7 @@ const UploadModal = ({ Loanno, selectedrole, onClose }) => {
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
                 placeholderText="Select a date"
-                dateFormat="yyyy/MM/dd"
+                dateFormat="MM/dd/yyyy"
                 isClearable
                 className="custom-datepicker"
                 maxDate={new Date()}
