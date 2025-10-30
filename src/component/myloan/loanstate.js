@@ -10,20 +10,21 @@ import {
 import "./LoanState.css";
 
 const LoanState = ({ loandata }) => {
+  console.log(loandata,"loan data")
   //   const currentDate = new Date();
   const currentDate = "2025-01-01";
   const loanMessage = getLoanMessage(loandata, currentDate);
 
   return (
     <div className="Coming_Up">
-      {loandata?.loan_details?.status === "Complete" ? (
+      {loandata?.loanDetail?.status === "Complete" ? (
         <LoanCompleted balance="$ 0" />
       ) : (
         <>
           <LoanInfo
             role={loandata?.role}
-            amountDue={formatNumber(loandata?.coming_up?.amount_due || 0)}
-            dueDate={formatLoanDate(loandata?.coming_up?.due_date)}
+            amountDue={formatNumber(loandata?.comingUp?.amountDue || 0)}
+            dueDate={formatLoanDate(loandata?.comingUp?.dueDate)}
           />
           <div className="LoanStateMessage">
             <LoanStateMessage
@@ -39,9 +40,9 @@ const LoanState = ({ loandata }) => {
           <div className="Current_Balance">
             <div>
               Current Balance: $
-              {loandata?.coming_up?.balance !== undefined &&
-              loandata?.coming_up?.balance !== null
-                ? formatNumber(loandata.coming_up.balance)
+              {loandata?.comingUp?.balance !== undefined &&
+              loandata?.comingUp?.balance !== null
+                ? formatNumber(loandata.comingUp.balance)
                 : formatNumber(0)}
             </div>
           </div>
