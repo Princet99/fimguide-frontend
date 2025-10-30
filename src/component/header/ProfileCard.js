@@ -1,97 +1,63 @@
 // src/components/ProfileCard.jsx
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import SettingsModal from "./settingsModal"; // Import the new SettingsModal component
 
-const ProfileCard = ({
-  isLoggedIn,
-  userName,
-  profilePic,
-  onLogin,
-  onSignUp,
-  onLogout,
-}) => {
+const devauthlogin = async () => {
+  window.location.href = `https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-5aa96b64-0844-4867-a3fe-d31753bdc2f6/fim-do-api-service/dev-auth-login`;
+};
+
+const devauthcallback = () => {};
+
+const devauthlogout = () => {};
+
+const ProfileCard = () => {
   const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); // New state for settings modal
   const profileCardRef = useRef(null);
-
-  // Close the profile card when clicking outside of it
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        profileCardRef.current &&
-        !profileCardRef.current.contains(event.target) &&
-        !isSettingsModalOpen // Don't close if settings modal is open
-      ) {
-        setIsProfileCardOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isSettingsModalOpen]); // Depend on isSettingsModalOpen to prevent premature closing
-
-  const toggleProfileCard = () => {
-    if (isLoggedIn) {
-      setIsProfileCardOpen(!isProfileCardOpen);
-    }
-  };
-
-  const openSettingsModal = () => {
-    setIsSettingsModalOpen(true);
-    setIsProfileCardOpen(false); // Close the profile card when opening settings
-  };
-
-  const closeSettingsModal = () => {
-    setIsSettingsModalOpen(false);
-  };
 
   return (
     <div style={{ position: "relative" }} ref={profileCardRef}>
       {/* Profile Icon or Login/Signup Buttons */}
       <div style={{ display: "flex", gap: "8px", cursor: "pointer" }}>
-        {isLoggedIn ? (
-          <img
-            src={profilePic}
-            alt="Profile"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-            onClick={toggleProfileCard}
-          />
-        ) : (
-          <>
-            <button
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-              onClick={onLogin}
-            >
-              Login
-            </button>
-            <button
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#28a745",
-                color: "#fff",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-              onClick={onSignUp}
-            >
-              Signup
-            </button>
-          </>
-        )}
+        <img
+          src=""
+          alt="Profile"
+          style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+          onClick={""}
+        />
+        <>
+          <button
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+            onClick={devauthlogin}
+          >
+            Login
+          </button>
+          <button
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#28a745",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+            onClick={""}
+          >
+            Signup
+          </button>
+        </>
       </div>
 
       {/* Profile Card (only visible when logged in and expanded) */}
-      {isLoggedIn && isProfileCardOpen && (
+      
         <div
           style={{
             position: "absolute",
@@ -108,16 +74,16 @@ const ProfileCard = ({
           {/* User Info */}
           <div style={{ textAlign: "center", marginBottom: "16px" }}>
             <img
-              src={profilePic}
+              src={"profilePic"}
               alt=""
               style={{ width: "60px", height: "60px", borderRadius: "50%" }}
             />
-            <p style={{ margin: "8px 0 0", fontWeight: "bold" }}>{userName}</p>
+            <p style={{ margin: "8px 0 0", fontWeight: "bold" }}>{"userName"}</p>
           </div>
 
           {/* Settings Button */}
           <button
-            onClick={openSettingsModal} // New handler to open settings
+            onClick={"openSettingsModal"} // New handler to open settings
             style={{
               width: "100%",
               padding: "8px",
@@ -134,7 +100,7 @@ const ProfileCard = ({
 
           {/* Logout Button */}
           <button
-            onClick={onLogout}
+            onClick={devauthlogout}
             style={{
               width: "100%",
               padding: "8px",
@@ -148,11 +114,10 @@ const ProfileCard = ({
             Logout
           </button>
         </div>
-      )}
 
       {/* Settings Modal */}
       {isSettingsModalOpen && (
-        <SettingsModal onClose={closeSettingsModal} userName={userName} />
+        <SettingsModal onClose={"closeSettingsModal"} userName={"userName"} />
       )}
     </div>
   );
