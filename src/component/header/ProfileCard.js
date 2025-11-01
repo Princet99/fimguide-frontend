@@ -4,7 +4,7 @@ import axios from "axios";
 import SettingsModal from "./settingsModal"; // Import the new SettingsModal component
 
 const devauthlogin = () => {
-  window.location.href = `http://api.fimdreams.com/dev-auth-login`;
+  window.location.href = `https://api.fimdreams.com/dev-auth-login`;
 };
 
 const devauthcallback = () => {};
