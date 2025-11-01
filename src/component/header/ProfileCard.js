@@ -3,8 +3,8 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import SettingsModal from "./settingsModal"; // Import the new SettingsModal component
 
-const devauthlogin = async () => {
-  window.location.href = `https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-5aa96b64-0844-4867-a3fe-d31753bdc2f6/fim-do-api-service/dev-auth-login`;
+const devauthlogin = () => {
+  window.location.href = `http://api.fimdreams.com/dev-auth-login`;
 };
 
 const devauthcallback = () => {};
