@@ -9,7 +9,9 @@ const devauthlogin = async () => {
 
 const devauthcallback = () => {};
 
-const devauthlogout = () => {};
+const devauthlogout = () => {
+  window.location.href = `https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-5aa96b64-0844-4867-a3fe-d31753bdc2f6/fim-do-api-service/dev-auth-login`;
+};
 
 const ProfileCard = () => {
   const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
@@ -57,63 +59,63 @@ const ProfileCard = () => {
       </div>
 
       {/* Profile Card (only visible when logged in and expanded) */}
-      
-        <div
+
+      <div
+        style={{
+          position: "absolute",
+          top: "50px",
+          right: "0",
+          backgroundColor: "#fff",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          borderRadius: "8px",
+          padding: "16px",
+          width: "200px",
+          zIndex: 1000,
+        }}
+      >
+        {/* User Info */}
+        <div style={{ textAlign: "center", marginBottom: "16px" }}>
+          <img
+            src={"profilePic"}
+            alt=""
+            style={{ width: "60px", height: "60px", borderRadius: "50%" }}
+          />
+          <p style={{ margin: "8px 0 0", fontWeight: "bold" }}>{"userName"}</p>
+        </div>
+
+        {/* Settings Button */}
+        <button
+          onClick={"openSettingsModal"} // New handler to open settings
           style={{
-            position: "absolute",
-            top: "50px",
-            right: "0",
-            backgroundColor: "#fff",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-            borderRadius: "8px",
-            padding: "16px",
-            width: "200px",
-            zIndex: 1000,
+            width: "100%",
+            padding: "8px",
+            backgroundColor: "#6c757d",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            marginBottom: "8px",
           }}
         >
-          {/* User Info */}
-          <div style={{ textAlign: "center", marginBottom: "16px" }}>
-            <img
-              src={"profilePic"}
-              alt=""
-              style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-            />
-            <p style={{ margin: "8px 0 0", fontWeight: "bold" }}>{"userName"}</p>
-          </div>
+          Settings
+        </button>
 
-          {/* Settings Button */}
-          <button
-            onClick={"openSettingsModal"} // New handler to open settings
-            style={{
-              width: "100%",
-              padding: "8px",
-              backgroundColor: "#6c757d",
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              marginBottom: "8px",
-            }}
-          >
-            Settings
-          </button>
-
-          {/* Logout Button */}
-          <button
-            onClick={devauthlogout}
-            style={{
-              width: "100%",
-              padding: "8px",
-              backgroundColor: "#ff4444",
-              color: "#fff",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            Logout
-          </button>
-        </div>
+        {/* Logout Button */}
+        <button
+          onClick={devauthlogout}
+          style={{
+            width: "100%",
+            padding: "8px",
+            backgroundColor: "#ff4444",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Logout
+        </button>
+      </div>
 
       {/* Settings Modal */}
       {isSettingsModalOpen && (
