@@ -10,7 +10,7 @@ const devauthlogin = () => {
 const devauthcallback = () => {};
 
 const devauthlogout = () => {
-  window.location.href = `https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-5aa96b64-0844-4867-a3fe-d31753bdc2f6/fim-do-api-service/dev-auth-logout`;
+  window.location.href = `https://api.fimdreams.com/dev-auth-logout`;
 };
 
 const ProfileCard = () => {
