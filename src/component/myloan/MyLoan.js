@@ -12,7 +12,7 @@ const API_BASE_URL = "https://api.fimdreams.com";
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
-  const { data } = await axios(`${API_BASE_URL}/dev-userloan/${userId}`, {
+  const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`, {
     withCredentials: true,
   });
 
