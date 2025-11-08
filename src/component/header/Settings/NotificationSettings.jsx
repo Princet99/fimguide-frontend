@@ -110,7 +110,7 @@ const NotificationSettings = () => {
   };
 
   // Combined loading state
-  const isLoading = areLoansLoading || areSettingsLoading;
+  const isLoading = areLoansLoading || "";
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-xl max-w-2xl mx-auto my-8 font-inter">
