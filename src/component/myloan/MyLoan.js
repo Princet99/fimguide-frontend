@@ -8,22 +8,21 @@ import UploadModal from "../action_button/UploadModal";
 import HistoryModal from "../action_button/HistoryModal";
 
 // Common base URL for the API
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "https://api.fimdreams.com";
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
-  const { data } = await axios.get(`${API_BASE_URL}/userloan/${userId}`);
-  console.log(userId)
+  const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`);
   return data;
 };
 
-// Fetches loan details 
-const fetchLoanDetail = async (userId,loanNumbers) => {
+// Fetches loan details
+const fetchLoanDetail = async (userId, loanNumbers) => {
   const requestBody = {
     loanNo: loanNumbers,
   };
   const { data } = await axios.post(
-    `${API_BASE_URL}/loan/${userId}`, // Hardcoded user 1
+    `${API_BASE_URL}/dev-loan/${userId}`,
     requestBody
   );
   return data.errors ? null : data;
@@ -32,6 +31,7 @@ const fetchLoanDetail = async (userId,loanNumbers) => {
 const MyLoan = () => {
   const { userId: userIdFromUrl } = useParams();
   const userId = userIdFromUrl || "1";
+
   // Removed Auth0 state
   const [selectedLoanDetails, setSelectedLoanDetails] = useState(null);
   const [selectedLoanNumber, setSelectedLoanNumber] = useState("");
@@ -40,7 +40,7 @@ const MyLoan = () => {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
 
   const [Loanno, setLoanno] = useState([]);
-  const [data, setData] = useState(null); 
+  const [data, setData] = useState(null);
   const [isUserLoading, setIsUserLoading] = useState(true);
   const [loannoIsSuccess, setLoannoIsSuccess] = useState(false);
 
@@ -50,7 +50,7 @@ const MyLoan = () => {
       // Removed userId check
       setIsUserLoading(true);
       try {
-        const userLoans = await fetchLoanNumbers(userId); // No userId passed
+        const userLoans = await fetchLoanNumbers(userId);
 
         if (userLoans && userLoans.length > 0) {
           setLoanno(userLoans);
@@ -59,7 +59,10 @@ const MyLoan = () => {
           );
 
           // 3. Fetch all details at once
-          const detailsResponse = await fetchLoanDetail( userId, loanNumbersToFetch);
+          const detailsResponse = await fetchLoanDetail(
+            userId,
+            loanNumbersToFetch
+          );
 
           // The API response has a 'data' wrapper
           setData(detailsResponse?.data || null);
@@ -78,15 +81,13 @@ const MyLoan = () => {
     };
 
     fetchAllData();
-  }, []); // Re-runs only on mount
+  }, []);
 
-  // This useEffect updates the displayed details when the selected loan changes
   useEffect(() => {
     if (!selectedLoanNumber || !data) {
       setSelectedLoanDetails(null);
       return;
     }
-    console.log(data,'all loans')
     const allLoans = data.loan || [];
     const normalizedSelectedLoanNumber = selectedLoanNumber.toLowerCase();
 
@@ -100,7 +101,7 @@ const MyLoan = () => {
   useEffect(() => {
     // Use 'loan_no' from your Loanno data structure
     if (Loanno && Loanno.length > 0 && !selectedLoanNumber) {
-      setSelectedLoanNumber(Loanno[0].loanNo); 
+      setSelectedLoanNumber(Loanno[0].loanNo);
       setselectedrole(Loanno[0].role);
     }
   }, [Loanno, selectedLoanNumber]);
@@ -168,7 +169,6 @@ const MyLoan = () => {
             <div className="first-row">
               <div className="left-container">
                 <p className="Heading">Coming up</p>
-                {console.log(selectedLoanDetails,"hello")}
                 <Loanstate loandata={selectedLoanDetails} />
               </div>
               <div className="right-grid">
