@@ -21,8 +21,8 @@ export const formatNumber = (value, locale = undefined, options = {}) => {
 };
 
 export const getLoanMessage = (loandata, currentDate) => {
-  console.log(loandata , "loan data");
-  const { loan_state, loan_details, role , coming_up } = loandata || {};
+  console.log(loandata, "loan data");
+  const { loan_state, loan_details, role } = loandata || {};
   const loanStatus = loan_details?.status;
   // const loanDate = new Date(loan_state?.date);
   // console.log(loan_state);
@@ -78,7 +78,7 @@ export const getLoanMessage = (loandata, currentDate) => {
   //     instructions: `by ${coming_up.due_date}`,
   //   };
   // }
-   else if (loan_state?.total_due > 0) {
+  else if (loan_state?.total_due > 0) {
     if (loan_state?.status === "On time" && role === "borrower") {
       return {
         message: "You have a past due balance!",

@@ -5,10 +5,7 @@ import { toast } from "react-toastify";
 
 // --- API Layer using Axios ---
 
-const apiUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://fimguide-backend.onrender.com"
-    : "http://localhost:8080"; // Assuming 3030 from your code, not 8080 from text
+const apiUrl = "https://api.fimdreams.com";
 
 // Helper function to handle API responses that might be a single object or an array
 const normalizetoArray = (data) => {
@@ -30,7 +27,6 @@ const NotificationSettings = () => {
   const [areLoansLoading, setAreLoansLoading] = useState(true);
 
   // State for the settings form
-  const [areSettingsLoading, setAreSettingsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   // State to manage which loan is currently selected in the dropdown
@@ -45,7 +41,7 @@ const NotificationSettings = () => {
 
   // --- Data Fetching: Loans ---
   useEffect(() => {
-    if (!userId) return; 
+    if (!userId) return;
 
     const fetchLoans = async () => {
       setAreLoansLoading(true);
@@ -66,7 +62,7 @@ const NotificationSettings = () => {
     };
 
     fetchLoans();
-  }, [userId]); 
+  }, [userId]);
 
   const handleSaveSettings = async () => {
     if (!selectedLoanNo || !userId) {

@@ -12,7 +12,8 @@ const API_BASE_URL = "https://api.fimdreams.com";
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
-  const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`);
+  const { data } = await axios(`${API_BASE_URL}/dev-userloan/${userId}`);
+
   return data;
 };
 
@@ -25,6 +26,7 @@ const fetchLoanDetail = async (userId, loanNumbers) => {
     `${API_BASE_URL}/dev-loan/${userId}`,
     requestBody
   );
+  console.log(data)
   return data.errors ? null : data;
 };
 
@@ -47,7 +49,6 @@ const MyLoan = () => {
   // New useEffect for data fetching, runs once on mount
   useEffect(() => {
     const fetchAllData = async () => {
-      // Removed userId check
       setIsUserLoading(true);
       try {
         const userLoans = await fetchLoanNumbers(userId);
@@ -81,7 +82,7 @@ const MyLoan = () => {
     };
 
     fetchAllData();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (!selectedLoanNumber || !data) {
