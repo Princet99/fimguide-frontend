@@ -8,14 +8,17 @@ import UploadModal from "../action_button/UploadModal";
 import HistoryModal from "../action_button/HistoryModal";
 
 // Common base URL for the API
-const API_BASE_URL = "https://api.fimdreams.com";
+const API_BASE_URL =
+  "https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-5aa96b64-0844-4867-a3fe-d31753bdc2f6/fim-do-api-service";
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
+  console.log(`${API_BASE_URL}/dev-userloan/${userId}`);
   const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`, {
     withCredentials: true,
+    credit,
   });
-
+  console.log(data);
   return data;
 };
 
@@ -24,13 +27,12 @@ const fetchLoanDetail = async (userId, loanNumbers) => {
   const requestBody = {
     loanNo: loanNumbers,
   };
-  const { data } = await axios.post(
-    `${API_BASE_URL}/dev-loan/${userId}`,
+  const { data } = await axios.post(`${API_BASE_URL}/dev-loan/${userId}`, {
     requestBody,
-    {
-      withCredentials: true,
-    }
-  );
+    withCredentials: true,
+    // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    // allowedHeaders: ["Content-Type", "Authorization"],
+  });
   console.log(data);
   return data.errors ? null : data;
 };
@@ -56,6 +58,7 @@ const MyLoan = () => {
     const fetchAllData = async () => {
       setIsUserLoading(true);
       try {
+        console.log(userId);
         const userLoans = await fetchLoanNumbers(userId);
 
         if (userLoans && userLoans.length > 0) {
