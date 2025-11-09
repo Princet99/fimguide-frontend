@@ -8,14 +8,14 @@ import UploadModal from "../action_button/UploadModal";
 import HistoryModal from "../action_button/HistoryModal";
 
 // Common base URL for the API
-const API_BASE_URL =
-  "https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-5aa96b64-0844-4867-a3fe-d31753bdc2f6/fim-do-api-service";
+const API_BASE_URL = "https://api.fimdreams.com";
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
   console.log(`${API_BASE_URL}/dev-userloan/${userId}`);
   const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`, {
     withCredentials: true,
+    credit
   });
   console.log(data);
   return data;
