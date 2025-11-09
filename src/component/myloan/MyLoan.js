@@ -15,7 +15,6 @@ const fetchLoanNumbers = async (userId) => {
   console.log(`${API_BASE_URL}/dev-userloan/${userId}`);
   const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`, {
     withCredentials: true,
-    credit
   });
   console.log(data);
   return data;
