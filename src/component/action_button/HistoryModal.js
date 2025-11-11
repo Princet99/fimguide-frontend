@@ -3,13 +3,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
+const apiUrl = process.env.REACT_APP_DEV_URL;
 
-// --- API Functions (unchanged) ---
-
-const apiUrl =
-  process.env.REACT_APP_ENV === "production"
-    ? "https://fimguide-backend.onrender.com"
-    : "http://localhost:3030";
 
 const fetchPaymentHistory = async (loanno) => {
   const { data } = await axios.get(`${apiUrl}/api/photo/${loanno}`);

@@ -11,10 +11,7 @@ const AccountSettings = ({ userName }) => {
   const sessionStoredEmail = sessionStorage.getItem("email");
 
   // Correctly define apiUrl
-  const apiUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://fimguide-backend.onrender.com"
-      : "http://localhost:3030";
+  const apiUrl = process.env.REACT_APP_DEV_URL;
 
   useEffect(() => {
     // If there's an email in session storage, prioritize it

@@ -3,15 +3,9 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import { toast } from "react-toastify";
-
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
-
-// --- API Functions using Axios ---
-const API_URL =
-  process.env.REACT_APP_ENV === "production"
-    ? "https://fimguide-backend.onrender.com"
-    : "http://localhost:3030";
+const apiUrl = process.env.REACT_APP_DEV_URL;
 
 /**
  * Uploads the payment confirmation file and data.
@@ -19,7 +13,7 @@ const API_URL =
  * @returns {Promise<object>} - The response data from the server.
  */
 const uploadPaymentConfirmation = async (formData) => {
-  const { data } = await axios.post(`${API_URL}/api/photo/upload`, formData, {
+  const { data } = await axios.post(`${apiUrl}/api/photo/upload`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -34,7 +28,7 @@ const uploadPaymentConfirmation = async (formData) => {
  */
 const sendAdminNotification = async (details) => {
   const { data } = await axios.post(
-    `${API_URL}/api/notify/payment-confirmation`,
+    `${apiUrl}/api/notify/payment-confirmation`,
     details
   );
   return data;

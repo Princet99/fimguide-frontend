@@ -12,53 +12,54 @@ import UploadModal from "../action_button/UploadModal";
 
 import HistoryModal from "../action_button/HistoryModal";
 
+
 const MyLoan = () => {
   const { getAccessTokenSilently, loginWithRedirect, isAuthenticated } =
-    useAuth0();
-
+  useAuth0();
+  
   const [user, setUser] = useState(null);
-
+  
   const [data, setData] = useState(null); // Store fetched data
-
+  
   const [selectedLoanDetails, setSelectedLoanDetails] = useState(null); // Loan details for selected nickname
-
+  
   const [selectedLoanNumber, setSelectedLoanNumber] = useState(""); // Selected loan number
-
+  
   const [selectedrole, setselectedrole] = useState("");
-
+  
   const [Loanno, setLoanno] = useState(null);
-
+  
   const [loading, setLoading] = useState(true);
-
+  
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-
+  
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
-
+  
   const [paymentHistory, setPaymentHistory] = useState([]); // toast notification
-
+  
   useEffect(() => {
     // Fetch payment history and check for pending verifications on page load
-
+    
     const fetchPaymentHistory = async () => {
       if (!selectedLoanNumber) return;
-
+      
       try {
         const response = await fetch(
           `${apiUrl}/paymentverification/${selectedLoanNumber}`
         );
-
+        
         if (!response.ok) {
           throw new Error("Failed to fetch payment history.");
         }
-
+        
         const data = await response.json();
-
+        
         setPaymentHistory(data); // Check for pending verifications
-
+        
         const hasPendingVerification = data.some(
           (record) => record.verification_status === 0
         );
-
+        
         if (hasPendingVerification) {
           toast.warning("Payment verification is pending.");
         }
@@ -66,42 +67,39 @@ const MyLoan = () => {
         console.error("Error fetching payment history:", error);
       }
     };
-
+    
     fetchPaymentHistory();
   }, [selectedLoanNumber]); // connect id setup
-
+  
   const [formData, setFormData] = useState({
     id: "",
-
+    
     first_name: "",
-
+    
     last_name: "",
   });
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+    
     setFormData({ ...formData, [name]: value });
   }; // Get userId from sessionStorage // const userId = sessionStorage.getItem("userId");
-
+  
   const userSession = sessionStorage.getItem("user");
-
+  
   const users = userSession ? JSON.parse(userSession) : null;
+  const apiUrl = process.env.REACT_APP_DEV_URL;
 
-  const apiUrl =
-    process.env.REACT_APP_ENV === "production"
-      ? "https://fimguide-backend.onrender.com"
-      : "http://localhost:3030"; // To get user details and loan details
-
+  
   console.log(apiUrl);
-
+  
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const token = await getAccessTokenSilently({
           authorizationParams: {
             audience: process.env.REACT_APP_AUTH_AUDIENCE,
-
+            
             scope: "read:posts",
           },
         }); // console.log(users.sub);
