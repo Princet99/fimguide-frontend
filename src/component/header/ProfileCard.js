@@ -1,6 +1,5 @@
 // src/components/ProfileCard.jsx
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
+import { useState, useRef } from "react";
 import SettingsModal from "./settingsModal"; // Import the new SettingsModal component
 
 const devauthlogin = () => {

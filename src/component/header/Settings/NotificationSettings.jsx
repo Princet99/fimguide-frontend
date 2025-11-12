@@ -25,7 +25,6 @@ const NotificationSettings = () => {
   const [areLoansLoading, setAreLoansLoading] = useState(true);
 
   // State for the settings form
-  const [areSettingsLoading, setAreSettingsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   // State to manage which loan is currently selected in the dropdown
@@ -40,7 +39,7 @@ const NotificationSettings = () => {
 
   // --- Data Fetching: Loans ---
   useEffect(() => {
-    if (!userId) return; 
+    if (!userId) return;
 
     const fetchLoans = async () => {
       setAreLoansLoading(true);
@@ -61,7 +60,7 @@ const NotificationSettings = () => {
     };
 
     fetchLoans();
-  }, [userId]); 
+  }, [userId]);
 
   const handleSaveSettings = async () => {
     if (!selectedLoanNo || !userId) {
@@ -109,7 +108,7 @@ const NotificationSettings = () => {
   };
 
   // Combined loading state
-  const isLoading = areLoansLoading || areSettingsLoading;
+  const isLoading = areLoansLoading || "";
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-xl max-w-2xl mx-auto my-8 font-inter">

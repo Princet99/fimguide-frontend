@@ -13,7 +13,11 @@ console.log("API_BASE_URL:", API_BASE_URL);
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
-  const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`);
+  console.log(`${API_BASE_URL}/dev-userloan/${userId}`);
+  const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`, {
+    withCredentials: true,
+  });
+  console.log(data);
   return data;
 };
 
@@ -22,10 +26,13 @@ const fetchLoanDetail = async (userId, loanNumbers) => {
   const requestBody = {
     loanNo: loanNumbers,
   };
-  const { data } = await axios.post(
-    `${API_BASE_URL}/dev-loan/${userId}`,
-    requestBody
-  );
+  const { data } = await axios.post(`${API_BASE_URL}/dev-loan/${userId}`, {
+    requestBody,
+    withCredentials: true,
+    // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    // allowedHeaders: ["Content-Type", "Authorization"],
+  });
+  console.log(data);
   return data.errors ? null : data;
 };
 
@@ -48,9 +55,9 @@ const MyLoan = () => {
   // New useEffect for data fetching, runs once on mount
   useEffect(() => {
     const fetchAllData = async () => {
-      // Removed userId check
       setIsUserLoading(true);
       try {
+        console.log(userId);
         const userLoans = await fetchLoanNumbers(userId);
 
         if (userLoans && userLoans.length > 0) {
@@ -82,7 +89,7 @@ const MyLoan = () => {
     };
 
     fetchAllData();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (!selectedLoanNumber || !data) {
