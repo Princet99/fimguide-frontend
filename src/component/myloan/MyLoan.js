@@ -8,7 +8,8 @@ import UploadModal from "../action_button/UploadModal";
 import HistoryModal from "../action_button/HistoryModal";
 
 // Common base URL for the API
-const API_BASE_URL = "https://api.fimdreams.com";
+const API_BASE_URL = process.env.REACT_APP_DEV_URL;
+console.log("API_BASE_URL:", API_BASE_URL);
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {

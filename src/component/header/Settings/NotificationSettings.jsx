@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom"; // Import useParams
 import axios from "axios";
 import { toast } from "react-toastify";
+const apiUrl = process.env.REACT_APP_DEV_URL;
 
-// --- API Layer using Axios ---
-
-const apiUrl = "https://api.fimdreams.com";
 
 // Helper function to handle API responses that might be a single object or an array
 const normalizetoArray = (data) => {
@@ -89,7 +87,7 @@ const NotificationSettings = () => {
       loanUserId: parseInt(userId, 10),
       loanNo: selectedLoanNo,
       emailId: email,
-      notificationType: "Payment_Received_Reminder", // Assumed type
+      notificationType: "Payment_Receiveable_Reminder", // Assumed type
       deliveryMethod: "Email",
       isEnabled: recieveNofiications ? 1 : 0,
       intervalDays: parseInt(receivereminderDays, 10),
