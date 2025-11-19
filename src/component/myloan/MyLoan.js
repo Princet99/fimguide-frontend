@@ -51,7 +51,7 @@ const MyLoan = () => {
     const verifyUser = async () => {
       try {
         // STEP 1: GET /verify → get stored userId if exists
-        const { data } = await axios.get(`${API_BASE_URL}/verify`, {
+        const { data } = await axios.get(`${API_BASE_URL}verify`, {
           withCredentials: true,
         });
         if (data?.result[0].usercode_id) {
@@ -80,7 +80,7 @@ const MyLoan = () => {
 
     try {
       await axios.patch(
-        `${API_BASE_URL}/verify`,
+        `${API_BASE_URL}verify`,
         { usercode: inputUserId },
         { withCredentials: true }
       );
