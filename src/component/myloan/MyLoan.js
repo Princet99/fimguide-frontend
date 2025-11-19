@@ -12,7 +12,7 @@ console.log("API_BASE_URL:", API_BASE_URL);
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
-  console.log(`${API_BASE_URL}/userloan/${userId}`);
+  console.log(`${API_BASE_URL}userloan/${userId}`);
   const { data } = await axios.get(`${API_BASE_URL}userloan/${userId}`, {
     withCredentials: true,
   });
