@@ -1,34 +1,80 @@
 // src/components/ProfileCard.jsx
-import { useState, useRef } from "react";
-import SettingsModal from "./settingsModal"; // Import the new SettingsModal component
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import SettingsModal from "./settingsModal";
 
+const API = process.env.REACT_APP_DEV_URL;
+
+// Redirect to login
 const devauthlogin = () => {
-  window.location.href = `https://api.fimdreams.com/dev-auth-login`;
+  window.location.href = `${API}/auth-login`;
 };
 
+// Redirect to logout
 const devauthlogout = () => {
-  window.location.href = `https://api.fimdreams.com/dev-auth-logout`;
+  window.location.href = `${API}/auth-logout`;
 };
 
 const ProfileCard = () => {
   const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
+  const [auth, setAuth] = useState({
+    isLoggedIn: false,
+    userName: "",
+    profilePic: "",
+  });
+
   const profileCardRef = useRef(null);
 
   const openSettingsModal = () => setIsSettingsModalOpen(true);
   const closeSettingsModal = () => setIsSettingsModalOpen(false);
 
+  // =============================
+  //   FETCH USER PROFILE (Axios)
+  // =============================
+  const loadUser = async () => {
+    try {
+      const res = await axios.get(`${API}/userprofile`, {
+        withCredentials: true,
+      });
+
+      const data = res.data;
+
+      if (data.message === "success") {
+        setAuth({
+          isLoggedIn: true,
+          userName: data.user?.name || "User",
+          profilePic: data.user?.picture || "",
+        });
+      } else {
+        setAuth({
+          isLoggedIn: false,
+          userName: "",
+          profilePic: "",
+        });
+      }
+    } catch (err) {
+      console.error("Profile load error:", err);
+      setAuth({
+        isLoggedIn: false,
+        userName: "",
+        profilePic: "",
+      });
+    }
+  };
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
   return (
     <div style={{ position: "relative" }} ref={profileCardRef}>
-      {/* Profile Icon / Login Buttons */}
-      <div style={{ display: "flex", gap: "8px", cursor: "pointer" }}>
-        <img
-          src=""
-          alt="Profile"
-          style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-          onClick={() => setIsProfileCardOpen((prev) => !prev)}
-        />
-        <>
+      {/* =============================
+          Not Logged In → Login + Signup
+      ============================= */}
+      {!auth.isLoggedIn && (
+        <div style={{ display: "flex", gap: "8px" }}>
           <button
             style={{
               padding: "8px 16px",
@@ -42,6 +88,7 @@ const ProfileCard = () => {
           >
             Login
           </button>
+
           <button
             style={{
               padding: "8px 16px",
@@ -51,15 +98,33 @@ const ProfileCard = () => {
               borderRadius: "4px",
               cursor: "pointer",
             }}
-            onClick={() => console.log("Signup")}
           >
             Signup
           </button>
-        </>
-      </div>
+        </div>
+      )}
 
-      {/* Profile Card */}
-      {isProfileCardOpen && (
+      {/* =============================
+          Logged In → Profile Icon
+      ============================= */}
+      {auth.isLoggedIn && (
+        <img
+          src={auth.profilePic || ""}
+          alt="Profile"
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            cursor: "pointer",
+          }}
+          onClick={() => setIsProfileCardOpen((prev) => !prev)}
+        />
+      )}
+
+      {/* =============================
+          Profile Dropdown
+      ============================= */}
+      {auth.isLoggedIn && isProfileCardOpen && (
         <div
           style={{
             position: "absolute",
@@ -75,12 +140,12 @@ const ProfileCard = () => {
         >
           <div style={{ textAlign: "center", marginBottom: "16px" }}>
             <img
-              src={"profilePic"}
+              src={auth.profilePic || ""}
               alt=""
               style={{ width: "60px", height: "60px", borderRadius: "50%" }}
             />
             <p style={{ margin: "8px 0 0", fontWeight: "bold" }}>
-              {"userName"}
+              {auth.userName}
             </p>
           </div>
 
@@ -119,7 +184,7 @@ const ProfileCard = () => {
 
       {/* Settings Modal */}
       {isSettingsModalOpen && (
-        <SettingsModal onClose={closeSettingsModal} userName={"userName"} />
+        <SettingsModal onClose={closeSettingsModal} userName={auth.userName} />
       )}
     </div>
   );

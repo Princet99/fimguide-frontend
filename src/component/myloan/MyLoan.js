@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./MyLoan.css";
-import { useParams } from "react-router-dom";
 import Loanstate from "./loanstate";
 import FloatingButtonWithTable from "../action_button/FloatingButtonWithTable";
 import UploadModal from "../action_button/UploadModal";
 import HistoryModal from "../action_button/HistoryModal";
 
 // Common base URL for the API
-const API_BASE_URL = process.env.REACT_APP_DEV_URL;
+const API_BASE_URL = process.env.REACT_APP_LOCAL_URL;
 console.log("API_BASE_URL:", API_BASE_URL);
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
-  console.log(`${API_BASE_URL}/dev-userloan/${userId}`);
-  const { data } = await axios.get(`${API_BASE_URL}/dev-userloan/${userId}`, {
+  console.log(`${API_BASE_URL}/userloan/${userId}`);
+  const { data } = await axios.get(`${API_BASE_URL}/userloan/${userId}`, {
     withCredentials: true,
   });
-  console.log(data);
-  return data;
+  if (data) {
+    return data?.result;
+  }
+  console.error(data.result);
 };
 
 // Fetches loan details
@@ -26,19 +27,69 @@ const fetchLoanDetail = async (userId, loanNumbers) => {
   const requestBody = {
     loanNo: loanNumbers,
   };
-  const { data } = await axios.post(`${API_BASE_URL}/dev-loan/${userId}`, {
+  const { data } = await axios.post(
+    `${API_BASE_URL}/loan/${userId}`,
     requestBody,
-    withCredentials: true,
-    // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    // allowedHeaders: ["Content-Type", "Authorization"],
-  });
-  console.log(data);
-  return data.errors ? null : data;
+    {
+      withCredentials: true,
+      // methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      // allowedHeaders: ["Content-Type", "Authorization"],
+    }
+  );
+  if (data) {
+    return data?.result;
+  }
+  console.error(data.result);
 };
 
 const MyLoan = () => {
-  const { userId: userIdFromUrl } = useParams();
-  const userId = userIdFromUrl || "1";
+  // const { userId: userIdFromUrl } = useParams();
+  const [inputUserId, setInputUserId] = useState("");
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      try {
+        // STEP 1: GET /verify → get stored userId if exists
+        const { data } = await axios.get(`${API_BASE_URL}/verify`, {
+          withCredentials: true,
+        });
+        if (data?.result[0].usercode_id) {
+          setUserId(data.result[0].usercode_id);
+          return;
+        }
+
+        // If backend returns NO userId → stay on connect account screen
+        setUserId("");
+      } catch (err) {
+        console.error("verify GET failed", err);
+        setUserId("");
+      }
+    };
+
+    verifyUser();
+  }, []);
+
+  const handleChange = (e) => {
+    setInputUserId(e.target.value);
+  };
+
+  // Called when user enters a new ID from input box
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.patch(
+        `${API_BASE_URL}/verify`,
+        { usercode: inputUserId },
+        { withCredentials: true }
+      );
+
+      setUserId(inputUserId); // 🔥 trigger fetch ONLY AFTER SUBMIT
+    } catch (err) {
+      console.error("verify PATCH failed", err);
+    }
+  };
 
   // Removed Auth0 state
   const [selectedLoanDetails, setSelectedLoanDetails] = useState(null);
@@ -277,8 +328,55 @@ const MyLoan = () => {
         // Replaced form with a simple message for when no loans are found
         <div className="Content">
           <h1>Dashboard</h1>
-          <div style={{ padding: "20px" }}>
-            <p>No loans found for this account.</p>
+          <div>
+            <h1>Connect with Fim account</h1>
+            <div
+              style={{
+                maxWidth: "400px",
+                margin: "0 auto",
+                marginTop: "20px",
+                padding: "20px",
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+              }}
+            >
+              <form
+                onSubmit={handleSubmit}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "15px",
+                }}
+              >
+                <div>
+                  <label
+                    htmlFor="id"
+                    style={{ display: "block", marginBottom: "5px" }}
+                  >
+                    User Code
+                  </label>
+
+                  <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    value={inputUserId}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
+                    required
+                  />
+                </div>
+
+                <button className="btn" type="submit">
+                  submit
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}

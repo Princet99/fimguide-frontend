@@ -4,7 +4,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 const apiUrl = process.env.REACT_APP_DEV_URL;
 
-
 // Helper function to handle API responses that might be a single object or an array
 const normalizetoArray = (data) => {
   if (Array.isArray(data)) {
@@ -45,7 +44,7 @@ const NotificationSettings = () => {
       setAreLoansLoading(true);
       try {
         const response = await axios.get(`${apiUrl}/userloan/${userId}`);
-        const loanData = normalizetoArray(response.data);
+        const loanData = normalizetoArray(response.data?.result);
         setLoans(loanData);
 
         if (loanData.length > 0) {
