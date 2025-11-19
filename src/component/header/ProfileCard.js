@@ -7,12 +7,12 @@ const API = process.env.REACT_APP_DEV_URL;
 
 // Redirect to login
 const devauthlogin = () => {
-  window.location.href = `${API}/auth-login`;
+  window.location.href = `${API}auth-login`;
 };
 
 // Redirect to logout
 const devauthlogout = () => {
-  window.location.href = `${API}/auth-logout`;
+  window.location.href = `${API}auth-logout`;
 };
 
 const ProfileCard = () => {
