@@ -7,13 +7,13 @@ import UploadModal from "../action_button/UploadModal";
 import HistoryModal from "../action_button/HistoryModal";
 
 // Common base URL for the API
-const API_BASE_URL = process.env.REACT_APP_LOCAL_URL;
+const API_BASE_URL = process.env.REACT_APP_DEV_URL;
 console.log("API_BASE_URL:", API_BASE_URL);
 
 // Fetches all Loan Numbers for user 1
 const fetchLoanNumbers = async (userId) => {
   console.log(`${API_BASE_URL}/userloan/${userId}`);
-  const { data } = await axios.get(`${API_BASE_URL}/userloan/${userId}`, {
+  const { data } = await axios.get(`${API_BASE_URL}userloan/${userId}`, {
     withCredentials: true,
   });
   if (data) {
@@ -28,7 +28,7 @@ const fetchLoanDetail = async (userId, loanNumbers) => {
     loanNo: loanNumbers,
   };
   const { data } = await axios.post(
-    `${API_BASE_URL}/loan/${userId}`,
+    `${API_BASE_URL}loan/${userId}`,
     requestBody,
     {
       withCredentials: true,
