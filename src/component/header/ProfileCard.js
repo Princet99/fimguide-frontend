@@ -35,7 +35,7 @@ const ProfileCard = () => {
   // =============================
   const loadUser = async () => {
     try {
-      const res = await axios.get(`${API}/userprofile`, {
+      const res = await axios.get(`${API}userprofile`, {
         withCredentials: true,
       });
 
