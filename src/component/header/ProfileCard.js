@@ -41,7 +41,7 @@ const ProfileCard = () => {
 
       const data = res.data;
 
-      if (data.message === "success") {
+      if (data.message === "Success") {
         setAuth({
           isLoggedIn: true,
           userName: data.user?.name || "User",
