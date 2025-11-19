@@ -61,7 +61,7 @@ const NotificationSettings = () => {
     const loadNotificationSettings = async () => {
       try {
         const res = await axios.get(
-          `${apiUrl}notification/${userId}/${selectedLoanNo}`
+          `${apiUrl}get-notification/${userId}/${selectedLoanNo}`
         );
 
         const rules = res.data?.res || [];
@@ -169,7 +169,7 @@ const NotificationSettings = () => {
       // DUE RULE
       if (dueRuleId) {
         await axios.patch(
-          `${apiUrl}notification/${dueRuleId}`,
+          `${apiUrl}patch-notification/${dueRuleId}`,
           duePatchPayload
         );
       } else {
@@ -179,7 +179,7 @@ const NotificationSettings = () => {
       // RECEIVABLE RULE
       if (receiveRuleId) {
         await axios.patch(
-          `${apiUrl}notification/${receiveRuleId}`,
+          `${apiUrl}patch-notification/${receiveRuleId}`,
           recvPatchPayload
         );
       } else {
