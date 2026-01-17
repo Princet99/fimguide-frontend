@@ -22,7 +22,7 @@ export const formatNumber = (value, locale = undefined, options = {}) => {
 
 export const getLoanMessage = (loandata, currentDate) => {
   console.log(loandata , "loan data");
-  const { loan_state, loan_details, role , coming_up } = loandata || {};
+  const { loan_state, loan_details, role  } = loandata || {};
   const loanStatus = loan_details?.status;
   // const loanDate = new Date(loan_state?.date);
   // console.log(loan_state);

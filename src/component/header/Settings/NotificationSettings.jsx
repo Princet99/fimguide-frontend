@@ -22,7 +22,7 @@ const fetchNotificationSettings = async (userId, loanNo) => {
   if (!userId || !loanNo) return null;
   // NOTE: Assuming the endpoint now includes the loan_no
   const { data } = await axios.get(
-    `${apiUrl}/api/reminders/${userId}/${loanNo}`
+    `${apiUrl}/api/reminders/${userId}/${loanNo}`,
   );
   return data;
 };
@@ -35,7 +35,7 @@ const saveNotificationSettings = async (payload) => {
   const { data } = await axios.post(
     `${apiUrl}/api/reminders/notification-settings`,
     payload,
-    { headers: { "Content-Type": "application/json" } }
+    { headers: { "Content-Type": "application/json" } },
   );
   return data;
 };
@@ -71,12 +71,7 @@ const NotificationSettings = () => {
 
   // 2. Query to fetch settings for the CURRENTLY SELECTED loan
   // MODIFIED: The query key and function now depend on 'selectedLoanNo'
-  const {
-    data: settingsData,
-    isLoading: areSettingsLoading,
-    isError,
-    error,
-  } = useQuery({
+  const { data: settingsData, isLoading: areSettingsLoading } = useQuery({
     queryKey: ["notificationSettings", userId, selectedLoanNo],
     queryFn: () => fetchNotificationSettings(userId, selectedLoanNo),
     // MODIFIED: Only run this query if a loan has been selected
@@ -106,7 +101,7 @@ const NotificationSettings = () => {
       setEmail(
         settingsData.nr_email ||
           JSON.parse(sessionStorage.getItem("user") || "{}")?.email ||
-          ""
+          "",
       );
     }
   }, [settingsData]);
@@ -141,7 +136,7 @@ const NotificationSettings = () => {
 
     // Find the role for the selected loan from the fetched loans data
     const selectedLoan = loansData?.find(
-      (loan) => loan.loan_no === selectedLoanNo
+      (loan) => loan.loan_no === selectedLoanNo,
     );
     if (!selectedLoan) {
       toast.error("Could not find details for the selected loan.");
