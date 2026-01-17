@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 
 const AccountSettings = ({ userName }) => {
   const [email, setEmail] = useState(""); // Initialize with an empty string
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
 
   const userId = sessionStorage.getItem("userId");
   // Retrieve updatedEmail from sessionStorage
