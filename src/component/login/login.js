@@ -27,25 +27,38 @@ const Login = ({ setIsLoggedIn, setUser }) => {
   };
 
   useEffect(() => {
-    const fetchAccessToken = async () => {
-      if (isAuthenticated) {
-        try {
-          const accessToken = await getAccessTokenSilently();
+  const fetchAccessToken = async () => {
+    if (isLoading) return;
 
-          sessionStorage.setItem("user", JSON.stringify(user));
-          sessionStorage.setItem("access_token", accessToken);
+    if (isAuthenticated) {
+      try {
+        const accessToken = await getAccessTokenSilently();
 
-          setIsLoggedIn(true);
+        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("access_token", accessToken);
+
+        setIsLoggedIn(true);
+
+        // Prevent repeated redirects
+        if (window.location.pathname === "/login") {
           navigate("/loan");
-        } catch (error) {
-          console.error("Error getting access token:", error);
-          toast.error("Failed to retrieve access token.");
         }
+      } catch (error) {
+        console.error("Error getting access token:", error);
+        toast.error("Failed to retrieve access token.");
       }
-    };
+    }
+  };
 
-    fetchAccessToken();
-  }, [isAuthenticated, navigate, user, setIsLoggedIn, getAccessTokenSilently]);
+  fetchAccessToken();
+}, [
+  isAuthenticated,
+  isLoading,          
+  navigate,
+  user,
+  setIsLoggedIn,
+  getAccessTokenSilently,
+]);
 
   const handleLogout = () => {
     console.log("Login.js: handleLogout called");
