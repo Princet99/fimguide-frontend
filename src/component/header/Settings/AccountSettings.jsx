@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 const AccountSettings = ({ userName }) => {
   const [email, setEmail] = useState(""); // Initialize with an empty string
-
+ 
   const userId = sessionStorage.getItem("userId");
   // Retrieve updatedEmail from sessionStorage
   const sessionStoredEmail = sessionStorage.getItem("email");
@@ -37,14 +37,10 @@ const AccountSettings = ({ userName }) => {
             console.error(
               `Failed to fetch user email: ${response.status} - ${errorText}`
             );
-            setMessage("Failed to load user email.");
-            setIsError(true);
             // Keep email as empty string to show placeholder
           }
         } catch (error) {
           console.error("Error fetching user email:", error);
-          setMessage("Error loading user email. Check network.");
-          setIsError(true);
           // Keep email as empty string to show placeholder
         }
       };
@@ -52,22 +48,7 @@ const AccountSettings = ({ userName }) => {
     }
   }, [userId, apiUrl, sessionStoredEmail]); // Add sessionStoredEmail to dependencies
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    setMessage("");
-    setIsError(false);
-  };
-
-  const handleSaveSettings = async () => {
-    if (!email || !email.includes("@")) {
-      setMessage("Please enter a valid email address.");
-      setIsError(true);
-      return;
-    }
-
     if (!userId) {
-      setMessage("User ID is missing. Cannot update email.");
-      setIsError(true);
       return;
     }
 
@@ -83,8 +64,7 @@ const AccountSettings = ({ userName }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setMessage(data.message || "Email updated successfully!");
-        setIsError(false);
+  
         // If the backend confirms the email, update state AND session storage
         if (data.updatedEmail) {
           setEmail(data.updatedEmail);
@@ -98,24 +78,14 @@ const AccountSettings = ({ userName }) => {
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
           const errorData = await response.json();
-          setMessage(
-            errorData.message || "Failed to update email. Please try again."
-          );
+  
         } else {
           const errorText = await response.text();
           console.error("Non-JSON error response:", errorText);
-          setMessage(
-            `Server error: ${response.status}. Please try again later.`
-          );
         }
-        setIsError(true);
       }
     } catch (error) {
       console.error("Error updating email:", error);
-      setMessage(
-        "An unexpected network error occurred. Please check your connection."
-      );
-      setIsError(true);
     }
   };
 
