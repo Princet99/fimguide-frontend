@@ -19,24 +19,28 @@ const Login = ({ setIsLoggedIn, setUser }) => {
 
   const handleAuth0Login = async () => {
     try {
-      loginWithRedirect();
+      await loginWithRedirect({
+        appState: { returnTo: "/loan" },
+      });
     } catch (error) {
-      console.error("Auth0 login error:", error);
       toast.error("Failed to redirect to Auth0 login.");
     }
   };
-
   useEffect(() => {
     const fetchAccessToken = async () => {
+      if (isLoading) return;
+
       if (isAuthenticated) {
         try {
           const accessToken = await getAccessTokenSilently();
-
-          sessionStorage.setItem("user", JSON.stringify(user));
-          sessionStorage.setItem("access_token", accessToken);
-
+          localStorage.setItem("access_token", accessToken);
+          localStorage.setItem("user", JSON.stringify(user));
           setIsLoggedIn(true);
-          navigate("/loan");
+
+          // Prevent repeated redirects
+          if (window.location.pathname === "/login") {
+            navigate("/loan");
+          }
         } catch (error) {
           console.error("Error getting access token:", error);
           toast.error("Failed to retrieve access token.");
@@ -45,15 +49,20 @@ const Login = ({ setIsLoggedIn, setUser }) => {
     };
 
     fetchAccessToken();
-  }, [isAuthenticated, navigate, user, setIsLoggedIn, getAccessTokenSilently]);
+  }, [
+    isAuthenticated,
+    isLoading,
+    navigate,
+    user,
+    setIsLoggedIn,
+    getAccessTokenSilently,
+  ]);
 
   const handleLogout = () => {
-    console.log("Login.js: handleLogout called");
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("access_token");
-    setIsLoggedIn(false);
     logout({
-      returnTo: window.location.origin,
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
     });
   };
 

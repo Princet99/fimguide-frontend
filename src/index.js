@@ -16,13 +16,25 @@ root.render(
     clientId={process.env.REACT_APP_AUTH_CLIENT_ID}
     authorizationParams={{
       redirect_uri: window.location.origin,
+      audience: process.env.REACT_APP_AUTH_AUDIENCE,
+      scope: "openid profile email",
+    }}
+    cacheLocation="localstorage"
+    useRefreshTokens={true}
+    useRefreshTokensFallback={true}
+    onRedirectCallback={(appState) => {
+      window.history.replaceState(
+        {},
+        document.title,
+        appState?.returnTo || window.location.pathname,
+      );
     }}
   >
     <QueryClientProvider client={queryClient}>
       <App />
       <ReactQueryDevtools />
     </QueryClientProvider>
-  </Auth0Provider>
+  </Auth0Provider>,
 );
 
 // If you want to start measuring performance in your app, pass a function

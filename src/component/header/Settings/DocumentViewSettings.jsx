@@ -3,7 +3,6 @@ import React, { useState } from "react";
 
 // DocumentViewSettings component (as provided by you, with updated Tailwind CSS)
 const DocumentViewSettings = () => {
-  const [theme, setTheme] = useState("light"); // Theme state not used in provided snippet, but kept
 
   return (
     <div className="p-4 bg-gray-50 rounded-lg shadow-inner">
