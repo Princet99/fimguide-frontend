@@ -32,6 +32,9 @@ const Login = ({ setIsLoggedIn, setUser }) => {
 
       if (isAuthenticated) {
         try {
+          const accessToken = await getAccessTokenSilently();
+          localStorage.setItem("access_token", accessToken);
+          localStorage.setItem("user", JSON.stringify(user));
           setIsLoggedIn(true);
 
           // Prevent repeated redirects

@@ -16,7 +16,7 @@ const apiUrl =
     ? "https://fimguide-backend.onrender.com"
     : "http://localhost:3030";
 
-  console.log(apiUrl);
+console.log(apiUrl);
 
 // Fetches User Details by auth0_sub
 const fetchUserDetails = async (token, auth0Sub) => {
@@ -35,7 +35,7 @@ const fetchLoanNumbers = async (userId) => {
 // fetches details for a specific loan
 const fetchLoanDetails = async (userId, loanNo) => {
   const { data } = await axios.get(
-    `${apiUrl}/my-loans/${userId}/loanNo/${loanNo}`
+    `${apiUrl}/my-loans/${userId}/loanNo/${loanNo}`,
   );
   return data.errors ? null : data;
 };
@@ -50,14 +50,19 @@ const connectUserAccount = async ({ token, id, auth0_sub }) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    },
   );
   return data;
 };
 
 const MyLoan = () => {
-  const { getAccessTokenSilently, loginWithRedirect, isAuthenticated } =
-    useAuth0();
+  const {
+    user: authUser,
+    isAuthenticated,
+    isLoading: authLoading,
+    getAccessTokenSilently,
+    loginWithRedirect,
+  } = useAuth0();
   const queryClient = useQueryClient();
   const [selectedLoanDetails, setSelectedLoanDetails] = useState(null);
   const [selectedLoanNumber, setSelectedLoanNumber] = useState("");
@@ -76,11 +81,9 @@ const MyLoan = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const userSession = sessionStorage.getItem("user");
-  const users = userSession ? JSON.parse(userSession) : null;
-
+  
   // --- React Query Hooks ---
-
+  
   // 1. Query to fetch user details (FIXED: Destructured properties)
   const {
     data: user,
@@ -88,41 +91,32 @@ const MyLoan = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["user", users?.sub],
+    queryKey: ["user", authUser?.sub],
     queryFn: async () => {
       const token = await getAccessTokenSilently({
         authorizationParams: {
           audience: process.env.REACT_APP_AUTH_AUDIENCE,
-          scope: "read:posts",
         },
       });
-      return fetchUserDetails(token, users.sub);
+      return fetchUserDetails(token, authUser.sub);
     },
-    enabled: !!(isAuthenticated && users?.sub),
+    enabled: !!(isAuthenticated && authUser?.sub),
     retry: false,
-    onError: (e) => {
-      if (e.error === "consent_required" || e.error === "login_required") {
-        loginWithRedirect({
-          authorizationParams: {
-            audience: process.env.REACT_APP_AUTH_AUDIENCE,
-            scope: "read:posts",
-          },
-        });
-      } else {
-        console.error("Error fetching user:", e);
-      }
-    },
   });
 
+  useEffect(() => {
+    if (user?.details) {
+      sessionStorage.setItem("email", user.details.us_email);
+      sessionStorage.setItem("userId", JSON.stringify(user.details.us_id));
+    }
+  }, [user]);
   // UseEffect to handle user not registered
   useEffect(() => {
     if (isError && error?.response?.status === 404) {
-      toast.info(
-        "Enter the user code! Provided by the Admin"
-      );
+      toast.info("Enter the user code! Provided by the Admin");
     }
   }, [isError, error]);
-
+  
   const userId = user?.details?.us_id || null;
   const email = user?.details?.us_email || null;
   sessionStorage.setItem("email", email);
@@ -188,10 +182,7 @@ const MyLoan = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!users || !formData.id) {
-      console.error("User or ID is missing");
-      return;
-    }
+    if (!authUser || !formData.id) return;
     const token = await getAccessTokenSilently({
       authorizationParams: {
         audience: process.env.REACT_APP_AUTH_AUDIENCE,
@@ -201,7 +192,7 @@ const MyLoan = () => {
     connectUserMutation.mutate({
       token,
       id: formData.id,
-      auth0_sub: users.sub,
+      auth0_sub: authUser.sub,
     });
   };
 
@@ -223,6 +214,11 @@ const MyLoan = () => {
   const handleOpenHistoryModal = () => setIsHistoryModalOpen(true);
   const handleCloseHistoryModal = () => setIsHistoryModalOpen(false);
 
+  if (authLoading) return <div>Loading...</div>;
+  if (!isAuthenticated) {
+    loginWithRedirect();
+    return null;
+  }
   return (
     <>
       {/* Use the destructured success state */}
@@ -237,7 +233,7 @@ const MyLoan = () => {
                   value={selectedLoanNumber}
                   onChange={(e) => {
                     const selected = Loanno.find(
-                      (l) => l.loan_no === e.target.value
+                      (l) => l.loan_no === e.target.value,
                     );
                     if (selected) {
                       setSelectedLoanNumber(selected.loan_no);
@@ -285,7 +281,7 @@ const MyLoan = () => {
             {isUploadModalOpen && (
               <UploadModal
                 Loanno={selectedLoanNumber}
-                role = {selectedrole}
+                role={selectedrole}
                 onClose={handleCloseUploadModal}
                 selectedrole={selectedrole}
               />
@@ -314,7 +310,7 @@ const MyLoan = () => {
                     <td>
                       $
                       {formatNumber(
-                        selectedLoanDetails?.loan_details?.loan_amount
+                        selectedLoanDetails?.loan_details?.loan_amount,
                       )}
                     </td>
                     <td>{selectedLoanDetails?.loan_details?.interest_rate}</td>
@@ -348,7 +344,7 @@ const MyLoan = () => {
                           <td>${formatNumber(payment.paidAmount)}</td>
                           <td>{payment.status}</td>
                         </tr>
-                      )
+                      ),
                     )}
                   </tbody>
                 </table>
