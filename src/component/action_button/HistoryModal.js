@@ -22,7 +22,7 @@ const updateVerificationStatus = async ({ recordId, newStatus }) => {
     `${apiUrl}/api/photo/paymentverification/${recordId}`,
     {
       verification_status: parseInt(newStatus, 10),
-    }
+    },
   );
   return data;
 };
@@ -32,7 +32,7 @@ const updateLenderComment = async ({ recordId, newComment }) => {
     `${apiUrl}/api/photo/lendercomment/${recordId}`,
     {
       lender_comment: newComment,
-    }
+    },
   );
   return data;
 };
@@ -235,7 +235,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                                     onClick={() => {
                                       handleVerificationStatusChange(
                                         record.cfid,
-                                        newValue
+                                        newValue,
                                       );
                                       closeToast();
                                     }}
@@ -276,7 +276,7 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                               closeOnClick: false,
                               draggable: false,
                               theme: "colored",
-                            }
+                            },
                           );
                           return; // stop normal flow until confirmed
                         }
@@ -301,7 +301,6 @@ const HistoryModal = ({ Loanno, selectedrole, onClose }) => {
                     }[record.verification_status] || "Verification Pending"
                   )}
                 </td>
-                {console.log(selectedrole)}
                 <td>
                   {selectedrole !== record.payer_role ? (
                     <input
