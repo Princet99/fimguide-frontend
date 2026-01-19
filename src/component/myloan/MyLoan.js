@@ -16,7 +16,6 @@ const apiUrl =
     ? "https://fimguide-backend.onrender.com"
     : "http://localhost:3030";
 
-console.log(apiUrl);
 
 // Fetches User Details by auth0_sub
 const fetchUserDetails = async (token, auth0Sub) => {
